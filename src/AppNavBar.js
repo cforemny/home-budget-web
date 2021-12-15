@@ -13,6 +13,7 @@ import {
     NavLink,
     UncontrolledDropdown
 } from 'reactstrap';
+import {AiFillHome} from "react-icons/ai";
 
 export default class AppNavBar extends Component {
 
@@ -24,17 +25,21 @@ export default class AppNavBar extends Component {
             isOpen: false
         };
     }
+
     toggle() {
         this.setState({
             isOpen: !this.state.isOpen
         });
     }
+
     render() {
         return (
             <div>
-                <Navbar color= 'light' light expand="md">
-                    <NavbarBrand href="/">Strona glowna</NavbarBrand>
-                    <NavbarToggler onClick={this.toggle} />
+                <Navbar color='light' light expand="md">
+                    <NavbarBrand href="/">
+                        <AiFillHome size={40}/>
+                    </NavbarBrand>
+                    <NavbarToggler onClick={this.toggle}/>
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
                             <NavItem>
@@ -63,7 +68,7 @@ export default class AppNavBar extends Component {
                                     <DropdownItem>
                                         Option 2
                                     </DropdownItem>
-                                    <DropdownItem divider />
+                                    <DropdownItem divider/>
                                     <DropdownItem>
                                         Reset
                                     </DropdownItem>

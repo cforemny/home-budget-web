@@ -109,7 +109,6 @@ class ExpenseList extends Component {
                             </Button>{' '}
                             <Button color='light' tag={Link} to="/expenses/new">Nowy wydatek</Button>
                     </div>
-
                     <Table hover className="mt-4">
                         <thead>
                         <tr>

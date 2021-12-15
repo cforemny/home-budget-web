@@ -3,6 +3,7 @@ import {Container, Input, Table} from 'reactstrap';
 import AppNavBar from '../AppNavBar';
 import Button from "reactstrap/es/Button";
 import Form from "reactstrap/es/Form";
+import {Link} from "react-router-dom";
 
 class MonthPlanner extends Component {
 
@@ -111,6 +112,36 @@ class MonthPlanner extends Component {
         }
         this.setState({item});
     }
+    increaseDate() {
+        let actualYear = this.state.year
+        let actualMonth = this.state.month
+        if (actualMonth === 12) {
+            let nextYear = actualYear + 1
+            this.setState({year: nextYear})
+            this.setState({month: 1})
+            this.getPlannedExpenses(nextYear, 1)
+        } else {
+            let nextMonth = actualMonth + 1;
+            this.setState({month: nextMonth})
+            this.getPlannedExpenses(this.state.year, nextMonth)
+        }
+    }
+
+    decreaseDate() {
+        let actualYear = this.state.year
+        let actualMonth = this.state.month
+        if (actualMonth === 1) {
+            let previousYear = actualYear - 1
+            this.setState({year: previousYear})
+            this.setState({month: 12})
+            this.getPlannedExpenses(previousYear, 12)
+        } else {
+            let previousMonth = actualMonth - 1;
+            this.setState({month: previousMonth})
+            this.getPlannedExpenses(this.state.year, previousMonth)
+        }
+    }
+
 
     render() {
         const {expenseCategories} = this.state;
@@ -139,7 +170,15 @@ class MonthPlanner extends Component {
         return (
             <div>
                 <AppNavBar/>
-                <h3>Planer wydatkow na {this.state.month}-{this.state.year}</h3>
+                <h3>Planer budzetu na {this.state.month}-{this.state.year}</h3>
+                <div>
+                    <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
+                        miesiac
+                    </Button>{' '}
+                    <Button color='light' onClick={() => this.increaseDate()}>Nastepny
+                        miesiac
+                    </Button>
+                </div>
                 <Container>
                     <Form id='expensesForm' onSubmit={this.handleSubmit}>
                         <Table stripped hover className="mt-4">

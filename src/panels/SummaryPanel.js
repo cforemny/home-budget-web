@@ -93,14 +93,12 @@ class SummaryPanel extends Component {
                 <AppNavBar/>
                 <h3>Podsumowanie miesiaca {this.state.month}-{this.state.year}</h3>
                 <div>
-                    <ButtonGroup>
                         <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
                             miesiac
-                        </Button>
+                        </Button>{' '}
                         <Button color='light' onClick={() => this.increaseDate()}>Nastepny
                             miesiac
                         </Button>
-                    </ButtonGroup>
                 </div>
                 <Container fluid="sm">
                     <Row>
