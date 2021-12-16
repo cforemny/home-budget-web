@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AppNavBar from "../AppNavBar";
+import AppNavBar from "../../AppNavBar";
 import {Button, Col, Container, Nav, NavItem, NavLink, Row, TabContent, TabPane} from "reactstrap";
-import MonthPlanner from "./MonthPlanner";
+import ExpensePlanner from "./ExpensePlanner";
+import IncomePlanner from "./IncomePlanner";
 
-class PlannerNavBar extends Component {
+class MonthPlanner extends Component {
 
     constructor(props) {
         super(props);
@@ -15,19 +16,29 @@ class PlannerNavBar extends Component {
             year: today.getFullYear(),
             activeTab: "expenses",
             expenseCategories: [],
-            plannedExpenses: []
+            incomeCategories: [],
+            plannedExpenses: [],
+            plannedIncomes: []
         }
     }
 
     componentDidMount() {
         this.getPlannedExpenses(this.state.year, this.state.month);
-        this.getCategories();
+        this.getPlannedIncomes(this.state.year, this.state.month)
+        this.getExpenseCategories();
+        this.getIncomeCategories();
     }
 
-    getCategories() {
+    getExpenseCategories() {
         fetch('/categories/expense')
             .then(response => response.json())
             .then(data => this.setState({expenseCategories: data}));
+    }
+
+    getIncomeCategories() {
+        fetch('/categories/income')
+            .then(response => response.json())
+            .then(data => this.setState({incomeCategories: data}));
     }
 
     increaseDate() {
@@ -38,10 +49,12 @@ class PlannerNavBar extends Component {
             this.setState({year: nextYear})
             this.setState({month: 1})
             this.getPlannedExpenses(nextYear, 1)
+            this.getPlannedIncomes(nextYear, 1)
         } else {
             let nextMonth = actualMonth + 1;
             this.setState({month: nextMonth})
             this.getPlannedExpenses(this.state.year, nextMonth)
+            this.getPlannedIncomes(this.state.year, nextMonth)
         }
     }
 
@@ -53,10 +66,12 @@ class PlannerNavBar extends Component {
             this.setState({year: previousYear})
             this.setState({month: 12})
             this.getPlannedExpenses(previousYear, 12)
+            this.getPlannedIncomes(previousYear, 12)
         } else {
             let previousMonth = actualMonth - 1;
             this.setState({month: previousMonth})
             this.getPlannedExpenses(this.state.year, previousMonth)
+            this.getPlannedIncomes(this.state.year, previousMonth)
         }
     }
 
@@ -64,6 +79,12 @@ class PlannerNavBar extends Component {
         fetch('/planner/expenses?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({plannedExpenses: data}));
+    }
+
+    getPlannedIncomes(year, month) {
+        fetch('/planner/incomes?year=' + year + '&month=' + month)
+            .then(response => response.json())
+            .then(data => this.setState({plannedIncomes: data}));
     }
 
     render() {
@@ -81,12 +102,12 @@ class PlannerNavBar extends Component {
                                 miesiac
                             </Button>
                         </div>
-                        <Nav tabs light>
-                            <NavItem>
+                        <Nav tabs>
+                            <NavItem >
                                 <NavLink onClick={() => this.setState({activeTab: 'expenses'})}> Wydatki
                                 </NavLink>
                             </NavItem>
-                            <NavItem>
+                            <NavItem color='light'>
                                 <NavLink onClick={() => this.setState({activeTab: 'incomes'})}> Przychody
                                 </NavLink>
                             </NavItem>
@@ -95,14 +116,16 @@ class PlannerNavBar extends Component {
                             <TabPane tabId="expenses">
                                 <Row>
                                     <Col sm="120">
-                                        <MonthPlanner year={this.state.year} month={this.state.month}
-                                                      plannedExpenses={this.state.plannedExpenses}
-                                                      expenseCategories={this.state.expenseCategories}/>
+                                        <ExpensePlanner year={this.state.year} month={this.state.month}
+                                                        plannedExpenses={this.state.plannedExpenses}
+                                                        expenseCategories={this.state.expenseCategories}/>
                                     </Col>
                                 </Row>
                             </TabPane>
                             <TabPane tabId="incomes">
-                                tutaj beda planowane przychody
+                                <IncomePlanner year={this.state.year} month={this.state.month}
+                                               plannedIncomes={this.state.plannedIncomes}
+                                                incomesCategories={this.state.incomeCategories}/>
                             </TabPane>
                         </TabContent>
                     </div>
@@ -112,4 +135,4 @@ class PlannerNavBar extends Component {
     }
 }
 
-export default PlannerNavBar;
+export default MonthPlanner;

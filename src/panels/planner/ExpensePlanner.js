@@ -3,7 +3,7 @@ import {Container, Input, Table} from 'reactstrap';
 import Button from "reactstrap/es/Button";
 import Form from "reactstrap/es/Form";
 
-class MonthPlanner extends Component {
+class ExpensePlanner extends Component {
 
     category = {
         id: '',
@@ -11,6 +11,7 @@ class MonthPlanner extends Component {
     }
 
     plannedExpense = {
+        id: '',
         description: '',
         value: '',
         category: '',
@@ -46,18 +47,16 @@ class MonthPlanner extends Component {
         window.location.reload(false);
     }
 
-    renderTableData(categoryId) {
-        return this.props.plannedExpenses.map((plannedExpense) => {
-            const {id, value, description, category} = plannedExpense
-            if (categoryId === category.id) {
-                return (
-                    <tr key={id}>
-                        <td>{description}</td>
-                        <td>{value}</td>
-                    </tr>
-                )
+    async remove(id) {
+        await fetch(`/planner/expenses/` + id, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
             }
-        })
+        )
+        window.location.reload(false);
     }
 
     handleExpenseDescriptionChange(event) {
@@ -88,6 +87,23 @@ class MonthPlanner extends Component {
         this.setState({item});
     }
 
+    renderTableData(categoryId) {
+        return this.props.plannedExpenses.map((plannedExpense) => {
+            const {id, value, description, category} = plannedExpense
+            if (categoryId === category.id) {
+                return (
+                    <tr key={id}>
+                        <td>{description}</td>
+                        <td>{value}</td>
+                        <td>
+                            <Button size="sm" color="danger" onClick={() => this.remove(id)}>Usun</Button>
+                        </td>
+                    </tr>
+                )
+            }
+        })
+    }
+
     render() {
         const {expenseCategories} = this.props;
         const expenseCategoryList = expenseCategories.map(category => {
@@ -106,7 +122,7 @@ class MonthPlanner extends Component {
                            onChange={this.handleExpenseValueChange}/>
                 </td>
                 <td>
-                    <Button>Dodaj</Button>
+                    <Button size="sm">Dodaj</Button>
                 </td>
             </tr>
             </tbody>
@@ -121,6 +137,7 @@ class MonthPlanner extends Component {
                             <tr>
                                 <th> Opis/Kategoria</th>
                                 <th> Planowana wysokość wydatku</th>
+                                <th>Akcja</th>
                             </tr>
                             </thead>
                             {expenseCategoryList}
@@ -132,4 +149,4 @@ class MonthPlanner extends Component {
     }
 }
 
-export default MonthPlanner;
+export default ExpensePlanner;
