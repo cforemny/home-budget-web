@@ -8,7 +8,7 @@ import IncomeList from "./lists/IncomeList";
 import IncomeEdit from "./editors/IncomeEdit";
 import AdminPanel from "./panels/AdminPanel";
 import SummaryPanel from "./panels/SummaryPanel";
-import MonthPlanner from "./panels/MonthPlanner";
+import PlannerNavBar from "./panels/PlannerNavBar";
 
 
 class App extends Component {
@@ -23,7 +23,7 @@ class App extends Component {
                     <Route path='/incomes/:id' component={IncomeEdit}/>
                     <Route path='/admin-panel' exact={true} component={AdminPanel}/>
                     <Route path='/summary' exact={true} component={SummaryPanel}/>
-                    <Route path='/planner' exact={true} component={MonthPlanner}/>
+                    <Route path='/planner' exact={true} component={PlannerNavBar}/>
                 </Switch>
             </Router>
         )
