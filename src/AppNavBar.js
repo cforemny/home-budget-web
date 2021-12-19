@@ -1,18 +1,6 @@
 import React, {Component} from 'react';
 
-import {
-    Collapse,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Nav,
-    Navbar,
-    NavbarBrand,
-    NavbarToggler,
-    NavItem,
-    NavLink,
-    UncontrolledDropdown
-} from 'reactstrap';
+import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink} from 'reactstrap';
 import {AiFillHome} from "react-icons/ai";
 
 export default class AppNavBar extends Component {
@@ -57,23 +45,24 @@ export default class AppNavBar extends Component {
                             <NavItem>
                                 <NavLink href="/admin-panel">Panel administratora</NavLink>
                             </NavItem>
-                            <UncontrolledDropdown nav inNavbar>
-                                <DropdownToggle nav caret>
-                                    Test drop down
-                                </DropdownToggle>
-                                <DropdownMenu right>
-                                    <DropdownItem>
-                                        Option 1
-                                    </DropdownItem>
-                                    <DropdownItem>
-                                        Option 2
-                                    </DropdownItem>
-                                    <DropdownItem divider/>
-                                    <DropdownItem>
-                                        Reset
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </UncontrolledDropdown>
+                            {/*moze sie przyda*/}
+                            {/*<UncontrolledDropdown nav inNavbar>*/}
+                            {/*    <DropdownToggle nav caret>*/}
+                            {/*        Test drop down*/}
+                            {/*    </DropdownToggle>*/}
+                            {/*    <DropdownMenu right>*/}
+                            {/*        <DropdownItem>*/}
+                            {/*            Option 1*/}
+                            {/*        </DropdownItem>*/}
+                            {/*        <DropdownItem>*/}
+                            {/*            Option 2*/}
+                            {/*        </DropdownItem>*/}
+                            {/*        <DropdownItem divider/>*/}
+                            {/*        <DropdownItem>*/}
+                            {/*            Reset*/}
+                            {/*        </DropdownItem>*/}
+                            {/*    </DropdownMenu>*/}
+                            {/*</UncontrolledDropdown>*/}
                         </Nav>
                     </Collapse>
                 </Navbar>

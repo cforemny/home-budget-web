@@ -7,7 +7,7 @@ import ExpenseEdit from "./editors/ExpenseEdit";
 import IncomeList from "./lists/IncomeList";
 import IncomeEdit from "./editors/IncomeEdit";
 import AdminPanel from "./panels/AdminPanel";
-import SummaryPanel from "./panels/SummaryPanel";
+import SummaryPanel from "./panels/summary/SummaryPanel";
 import MonthPlanner from "./panels/planner/MonthPlanner";
 
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, ButtonGroup, Container, Table} from 'reactstrap';
+import {Button, Container, Table} from 'reactstrap';
 import AppNavBar from '../AppNavBar';
 import {Link} from 'react-router-dom';
 
@@ -12,7 +12,8 @@ class ExpenseList extends Component {
         this.state = {
             expenses: [],
             month: today.getMonth() + 1,
-            year: today.getFullYear()
+            year: today.getFullYear(),
+            expenseCategories: []
         };
         this.remove = this.remove.bind(this);
     }
@@ -21,6 +22,13 @@ class ExpenseList extends Component {
         fetch('/expenses?year=' + this.state.year + '&month=' + this.state.month)
             .then(response => response.json())
             .then(data => this.setState({expenses: data}));
+        this.getExpenseCategories();
+    }
+
+    getExpenseCategories() {
+        fetch('/categories/expense')
+            .then(response => response.json())
+            .then(data => this.setState({expenseCategories: data}));
     }
 
     async remove(id) {
@@ -74,27 +82,34 @@ class ExpenseList extends Component {
         }
     }
 
+    renderTableData(categoryId) {
+        return this.state.expenses.map(expense => {
+            if (categoryId === expense.category.id) {
+                return (
+                    <tr key={expense.id}>
+                        <td>{expense.additionalInformation}</td>
+                        <td>{expense.value} zł</td>
+                        <td>{expense.insertDate}</td>
+                        <td>
+                                <Button size="sm" color="primary" tag={Link}
+                                        to={"/expenses/" + expense.id}>Edytuj</Button>{' '}
+                                <Button size="sm" color="danger" onClick={() => this.remove(expense.id)}>Usun</Button>
+                        </td>
+                    </tr>
+                )
+            }
+        });
+    }
+
     render() {
-
-        const {expenses, isLoading} = this.state;
-
-        if (isLoading) {
-            return <p>Loading...</p>;
-        }
-
-        const expenseList = expenses.map(expense => {
-            return <tr key={expense.id}>
-                <td>{expense.category.description}</td>
-                <td>{expense.value}</td>
-                <td>{expense.additionalInformation}</td>
-                <td>{expense.insertDate}</td>
-                <td>
-                    <ButtonGroup>
-                        <Button size="sm" color="primary" tag={Link} to={"/expenses/" + expense.id}>Edytuj</Button>
-                        <Button size="sm" color="danger" onClick={() => this.remove(expense.id)}>Usun</Button>
-                    </ButtonGroup>
-                </td>
+        const {expenseCategories} = this.state;
+        const expenseCategoryList = expenseCategories.map(category => {
+            return <tbody>
+            <tr class="text-uppercase" key={category.id}>
+                <td>{category.description}</td>
             </tr>
+            {this.renderTableData(category.id)}
+            </tbody>
         });
 
         return (
@@ -103,28 +118,29 @@ class ExpenseList extends Component {
                 <Container fluid>
                     <h3>Wydatki {this.state.month}-{this.state.year}</h3>
                     <div>
-                            <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
-                                miesiac
-                            </Button>{' '}
-                            <Button color='light' onClick={() => this.increaseDate()}>Nastepny
-                                miesiac
-                            </Button>{' '}
-                            <Button color='light' tag={Link} to="/expenses/new">Nowy wydatek</Button>
+                        <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
+                            miesiac
+                        </Button>{' '}
+                        <Button color='light' onClick={() => this.increaseDate()}>Nastepny
+                            miesiac
+                        </Button>{' '}
+                        <Button color='light' tag={Link} to="/expenses/new">Nowy wydatek</Button>
                     </div>
-                    <Table hover className="mt-4">
-                        <thead>
-                        <tr>
-                            <th width="10%">Kategoria</th>
-                            <th width="10%">Kwota</th>
-                            <th width="20%">Dodatkowe informacje</th>
-                            <th width="20%">Data dodania</th>
-                            <th width="40%">Akcja</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {expenseList}
-                        </tbody>
-                    </Table>
+                    <div>
+                        <Container>
+                            <Table hover className="mt-4">
+                                <thead>
+                                <tr>
+                                    <th width="20%">Kategoria/Opis</th>
+                                    <th width="10%">Kwota</th>
+                                    <th width="20%">Data dodania</th>
+                                    <th width="30%">Akcja</th>
+                                </tr>
+                                </thead>
+                                {expenseCategoryList}
+                            </Table>
+                        </Container>
+                    </div>
                 </Container>
             </div>
         );

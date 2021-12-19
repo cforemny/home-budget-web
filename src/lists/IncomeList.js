@@ -1,17 +1,18 @@
 import React, {Component} from 'react';
-import {Button, ButtonGroup, Container, Table} from 'reactstrap';
+import {Button, Container, Table} from 'reactstrap';
 import AppNavBar from '../AppNavBar';
 import {Link} from 'react-router-dom';
 
 class IncomeList extends Component {
 
     constructor(props) {
-        var today = new Date();
+        let today = new Date();
         super(props);
         this.state = {
             incomes: [],
             month: today.getMonth() + 1,
-            year: today.getFullYear()
+            year: today.getFullYear(),
+            incomeCategories: []
         };
     }
 
@@ -19,6 +20,13 @@ class IncomeList extends Component {
         fetch('/incomes?year=' + this.state.year + '&month=' + this.state.month)
             .then(response => response.json())
             .then(data => this.setState({incomes: data}));
+        this.getIncomeCategories();
+    }
+
+    getIncomeCategories() {
+        fetch('/categories/income')
+            .then(response => response.json())
+            .then(data => this.setState({incomeCategories: data}));
     }
 
     async remove(id) {
@@ -35,23 +43,22 @@ class IncomeList extends Component {
     }
 
     increaseDate() {
-        var actualYear = this.state.year
-        var actualMonth = this.state.month
+        let actualYear = this.state.year
+        let actualMonth = this.state.month
         if (actualMonth === 12) {
-            var nextYear = actualYear + 1
+            let nextYear = actualYear + 1
             this.setState({year: nextYear})
             this.setState({month: 1})
             fetch('/incomes?year=' + nextYear + '&month=' + 1)
                 .then(response => response.json())
                 .then(data => this.setState({incomes: data}));
         } else {
-            var nextMonth = actualMonth + 1;
+            let nextMonth = actualMonth + 1;
             this.setState({month: nextMonth})
             fetch('/incomes?year=' + this.state.year + '&month=' + nextMonth)
                 .then(response => response.json())
                 .then(data => this.setState({incomes: data}));
         }
-
     }
 
     decreaseDate() {
@@ -73,25 +80,34 @@ class IncomeList extends Component {
         }
     }
 
-    render() {
-        const {incomes, isLoading} = this.state;
-        if (isLoading) {
-            return <p>Loading...</p>;
-        }
+    renderTableData(categoryId) {
+        return this.state.incomes.map(income => {
+            if (categoryId === income.category.id) {
+                return (
+                    <tr key={income.id}>
+                        <td>{income.additionalInformation}</td>
+                        <td>{income.value} zł</td>
+                        <td>{income.insertDate}</td>
+                        <td>
+                            <Button size="sm" color="primary" tag={Link}
+                                    to={"/expenses/" + income.id}>Edytuj</Button>{' '}
+                            <Button size="sm" color="danger" onClick={() => this.remove(income.id)}>Usun</Button>
+                        </td>
+                    </tr>
+                )
+            }
+        });
+    }
 
-        const incomeList = incomes.map(income => {
-            return <tr key={income.id}>
-                <td>{income.category.description}</td>
-                <td>{income.value}</td>
-                <td>{income.additionalInformation}</td>
-                <td>{income.insertDate}</td>
-                <td>
-                    <ButtonGroup>
-                        <Button size="sm" color="primary" tag={Link} to={"/incomes/" + income.id}>Edytuj</Button>
-                        <Button size="sm" color="danger" onClick={() => this.remove(income.id)}>Usun</Button>
-                    </ButtonGroup>
-                </td>
+    render() {
+        const {incomeCategories} = this.state;
+        const incomeCategoryList = incomeCategories.map(category => {
+            return <tbody>
+            <tr class="text-uppercase" key={category.id}>
+                <td>{category.description}</td>
             </tr>
+            {this.renderTableData(category.id)}
+            </tbody>
         });
 
         return (
@@ -100,28 +116,29 @@ class IncomeList extends Component {
                 <Container fluid>
                     <h3>Przychody {this.state.month}-{this.state.year}</h3>
                     <div>
-                            <Button color='light' onClick={() => this.decreaseDate()}>
-                                Poprzedni miesiac
-                            </Button>{' '}
-                            <Button color='light' onClick={() => this.increaseDate()}>
-                                Nastepny miesiac
-                            </Button>{' '}
-                            <Button color='light' tag={Link} to="/incomes/new">Nowy wydatek</Button>
+                        <Button color='light' onClick={() => this.decreaseDate()}>
+                            Poprzedni miesiac
+                        </Button>{' '}
+                        <Button color='light' onClick={() => this.increaseDate()}>
+                            Nastepny miesiac
+                        </Button>{' '}
+                        <Button color='light' tag={Link} to="/incomes/new">Nowy wydatek</Button>
                     </div>
-                    <Table className="mt-4" responsive hover>
-                        <thead>
-                        <tr>
-                            <th width="10%">Kategoria</th>
-                            <th width="10%">Kwota</th>
-                            <th width="20%">Dodatkowe informacje</th>
-                            <th width="20%">Data dodania</th>
-                            <th width="40%">Akcja</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {incomeList}
-                        </tbody>
-                    </Table>
+                    <div>
+                        <Container>
+                            <Table className="mt-4" responsive hover>
+                                <thead>
+                                <tr>
+                                    <th width="20%">Kategoria/Opis</th>
+                                    <th width="10%">Kwota</th>
+                                    <th width="20%">Data dodania</th>
+                                    <th width="30%">Akcja</th>
+                                </tr>
+                                </thead>
+                                {incomeCategoryList}
+                            </Table>
+                        </Container>
+                    </div>
                 </Container>
             </div>
         );

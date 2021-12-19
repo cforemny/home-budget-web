@@ -89,13 +89,13 @@ class MonthPlanner extends Component {
             this.getPlannedExpenses(previousYear, 12)
             this.getPlannedIncomes(previousYear, 12)
             this.getExpenseSummary(previousYear, 12)
-            this.getExpenseSummary(previousYear, 12)
+            this.getIncomeSummary(previousYear, 12)
         } else {
             let previousMonth = actualMonth - 1;
             this.setState({month: previousMonth})
             this.getPlannedExpenses(this.state.year, previousMonth)
             this.getPlannedIncomes(this.state.year, previousMonth)
-            this.getIncomeSummary(this.state.year, previousMonth)
+            this.getExpenseSummary(this.state.year, previousMonth)
             this.getIncomeSummary(this.state.year, previousMonth)
         }
     }

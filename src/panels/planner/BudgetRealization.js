@@ -25,7 +25,7 @@ class BudgetRealization extends Component {
 
     render() {
         return (
-            <Container fluid inline-block>
+            <Container fluid>
                 <div>
                     <Table responsive hover>
                         <thead>
