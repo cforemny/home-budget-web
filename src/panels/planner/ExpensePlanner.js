@@ -23,7 +23,8 @@ class ExpensePlanner extends Component {
         let today = new Date();
         this.state = {
             currentDate: today,
-            item: this.plannedExpense
+            item: this.plannedExpense,
+            expenseSummary: 0
         }
         this.handleExpenseDescriptionChange = this.handleExpenseDescriptionChange.bind(this);
         this.handleExpenseValueChange = this.handleExpenseValueChange.bind(this);
@@ -94,7 +95,7 @@ class ExpensePlanner extends Component {
                 return (
                     <tr key={id}>
                         <td>{description}</td>
-                        <td>{value}</td>
+                        <td>{value}zł</td>
                         <td>
                             <Button size="sm" color="danger" onClick={() => this.remove(id)}>Usun</Button>
                         </td>
@@ -109,7 +110,7 @@ class ExpensePlanner extends Component {
         const expenseCategoryList = expenseCategories.map(category => {
             return <tbody>
             <tr key={category.id}>
-                <td>{category.description}</td>
+                <td bold>{category.description}</td>
             </tr>
             {this.renderTableData(category.id)}
             <tr>

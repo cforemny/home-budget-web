@@ -3,6 +3,7 @@ import {Button, ButtonGroup, Container, Table} from 'reactstrap';
 import AppNavBar from '../AppNavBar';
 import {Link} from 'react-router-dom';
 
+
 class ExpenseList extends Component {
 
     constructor(props) {
@@ -74,6 +75,7 @@ class ExpenseList extends Component {
     }
 
     render() {
+
         const {expenses, isLoading} = this.state;
 
         if (isLoading) {

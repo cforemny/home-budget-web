@@ -94,7 +94,7 @@ class IncomePlanner extends Component {
                 return (
                     <tr key={id}>
                         <td>{description}</td>
-                        <td>{value}</td>
+                        <td>{value}zł</td>
                         <td>
                             <Button size="sm" color="danger" onClick={() => this.remove(id)}>Usun</Button>
                         </td>
