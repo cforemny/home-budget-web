@@ -83,7 +83,7 @@ class IncomeEdit extends Component {
 
     render() {
         const {item} = this.state;
-        const title = <h2>{item.id ? 'Edytuj przychod' : 'Dodaj przychod'}</h2>;
+        const title = <h2>Edytuj przychod</h2>;
 
         return <div>
             <AppNavBar/>

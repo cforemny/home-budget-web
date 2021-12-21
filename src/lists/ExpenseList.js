@@ -1,10 +1,25 @@
 import React, {Component} from 'react';
-import {Button, Container, Table} from 'reactstrap';
+import {Button, Container, Input, Table} from 'reactstrap';
 import AppNavBar from '../AppNavBar';
 import {Link} from 'react-router-dom';
+import Form from "reactstrap/es/Form";
 
 
 class ExpenseList extends Component {
+
+
+    category = {
+        id: '',
+        description: ''
+    }
+
+    expense = {
+        id: '',
+        additionalInformation: '',
+        value: '',
+        category: '',
+        insertDate: ''
+    }
 
     constructor(props) {
         let today = new Date();
@@ -13,9 +28,13 @@ class ExpenseList extends Component {
             expenses: [],
             month: today.getMonth() + 1,
             year: today.getFullYear(),
+            item: this.expense,
             expenseCategories: []
         };
         this.remove = this.remove.bind(this);
+        this.handleExpenseDescriptionChange = this.handleExpenseDescriptionChange.bind(this);
+        this.handleExpenseValueChange = this.handleExpenseValueChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -82,6 +101,51 @@ class ExpenseList extends Component {
         }
     }
 
+    async handleSubmit(event) {
+        event.preventDefault();
+        let {item} = this.state;
+        await fetch('/expenses',
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(item),
+            });
+        this.setState({item: this.plannedExpense});
+        document.getElementById('expensesForm').reset()
+        window.location.reload(false);
+    }
+
+    handleExpenseDescriptionChange(event) {
+        let item;
+        const target = event.target;
+        item = {
+            value: this.state.item.value,
+            additionalInformation: target.value,
+            insertDate: this.state.currentDate,
+            category: {
+                id: target.id
+            }
+        }
+        this.setState({item});
+    }
+
+    handleExpenseValueChange(event) {
+        let item;
+        const target = event.target;
+        item = {
+            value: target.value,
+            additionalInformation: this.state.item.additionalInformation,
+            insertDate: this.state.currentDate,
+            category: {
+                id: target.id
+            }
+        }
+        this.setState({item});
+    }
+
     renderTableData(categoryId) {
         return this.state.expenses.map(expense => {
             if (categoryId === expense.category.id) {
@@ -91,9 +155,9 @@ class ExpenseList extends Component {
                         <td>{expense.value} zł</td>
                         <td>{expense.insertDate}</td>
                         <td>
-                                <Button size="sm" color="primary" tag={Link}
-                                        to={"/expenses/" + expense.id}>Edytuj</Button>{' '}
-                                <Button size="sm" color="danger" onClick={() => this.remove(expense.id)}>Usun</Button>
+                            <Button size="sm" color="primary" tag={Link}
+                                    to={"/expenses/" + expense.id}>Edytuj</Button>{' '}
+                            <Button size="sm" color="danger" onClick={() => this.remove(expense.id)}>Usun</Button>
                         </td>
                     </tr>
                 )
@@ -109,6 +173,20 @@ class ExpenseList extends Component {
                 <td>{category.description}</td>
             </tr>
             {this.renderTableData(category.id)}
+            <tr>
+                <td>
+                    <Input id={category.id} placeholder='Opis'
+                           onChange={this.handleExpenseDescriptionChange}/>
+                </td>
+                <td>
+                    <Input id={category.id} placeholder='Kwota'
+                           onChange={this.handleExpenseValueChange}/>
+                </td>
+                <td></td>
+                <td>
+                    <Button size="sm">Dodaj</Button>
+                </td>
+            </tr>
             </tbody>
         });
 
@@ -123,22 +201,23 @@ class ExpenseList extends Component {
                         </Button>{' '}
                         <Button color='light' onClick={() => this.increaseDate()}>Nastepny
                             miesiac
-                        </Button>{' '}
-                        <Button color='light' tag={Link} to="/expenses/new">Nowy wydatek</Button>
+                        </Button>
                     </div>
                     <div>
                         <Container>
-                            <Table hover className="mt-4">
-                                <thead>
-                                <tr>
-                                    <th width="20%">Kategoria/Opis</th>
-                                    <th width="10%">Kwota</th>
-                                    <th width="20%">Data dodania</th>
-                                    <th width="30%">Akcja</th>
-                                </tr>
-                                </thead>
-                                {expenseCategoryList}
-                            </Table>
+                            <Form id='expensesForm' onSubmit={this.handleSubmit}>
+                                <Table hover className="mt-4">
+                                    <thead>
+                                    <tr>
+                                        <th width="20%">Kategoria/Opis</th>
+                                        <th width="10%">Kwota</th>
+                                        <th width="20%">Data dodania</th>
+                                        <th width="30%">Akcja</th>
+                                    </tr>
+                                    </thead>
+                                    {expenseCategoryList}
+                                </Table>
+                            </Form>
                         </Container>
                     </div>
                 </Container>

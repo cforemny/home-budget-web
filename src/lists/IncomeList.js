@@ -1,9 +1,23 @@
 import React, {Component} from 'react';
-import {Button, Container, Table} from 'reactstrap';
+import {Button, Container, Input, Table} from 'reactstrap';
 import AppNavBar from '../AppNavBar';
 import {Link} from 'react-router-dom';
+import Form from "reactstrap/es/Form";
 
 class IncomeList extends Component {
+
+    category = {
+        id: '',
+        description: ''
+    }
+
+    income = {
+        id: '',
+        additionalInformation: '',
+        value: '',
+        category: '',
+        insertDate: ''
+    }
 
     constructor(props) {
         let today = new Date();
@@ -12,8 +26,13 @@ class IncomeList extends Component {
             incomes: [],
             month: today.getMonth() + 1,
             year: today.getFullYear(),
+            item: this.income,
             incomeCategories: []
         };
+        this.remove = this.remove.bind(this);
+        this.handleIncomeDescriptionChange = this.handleIncomeDescriptionChange.bind(this);
+        this.handleIncomeValueChange = this.handleIncomeValueChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -80,6 +99,52 @@ class IncomeList extends Component {
         }
     }
 
+
+    async handleSubmit(event) {
+        event.preventDefault();
+        let {item} = this.state;
+        await fetch('/incomes',
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(item),
+            });
+        this.setState({item: this.plannedExpense});
+        document.getElementById('incomesForm').reset()
+        window.location.reload(false);
+    }
+
+    handleIncomeDescriptionChange(event) {
+        let item;
+        const target = event.target;
+        item = {
+            value: this.state.item.value,
+            additionalInformation: target.value,
+            insertDate: this.state.currentDate,
+            category: {
+                id: target.id
+            }
+        }
+        this.setState({item});
+    }
+
+    handleIncomeValueChange(event) {
+        let item;
+        const target = event.target;
+        item = {
+            value: target.value,
+            additionalInformation: this.state.item.additionalInformation,
+            insertDate: this.state.currentDate,
+            category: {
+                id: target.id
+            }
+        }
+        this.setState({item});
+    }
+
     renderTableData(categoryId) {
         return this.state.incomes.map(income => {
             if (categoryId === income.category.id) {
@@ -90,7 +155,7 @@ class IncomeList extends Component {
                         <td>{income.insertDate}</td>
                         <td>
                             <Button size="sm" color="primary" tag={Link}
-                                    to={"/expenses/" + income.id}>Edytuj</Button>{' '}
+                                    to={"/incomes/" + income.id}>Edytuj</Button>{' '}
                             <Button size="sm" color="danger" onClick={() => this.remove(income.id)}>Usun</Button>
                         </td>
                     </tr>
@@ -107,6 +172,20 @@ class IncomeList extends Component {
                 <td>{category.description}</td>
             </tr>
             {this.renderTableData(category.id)}
+            <tr>
+                <td>
+                    <Input id={category.id} placeholder='Opis'
+                           onChange={this.handleIncomeDescriptionChange}/>
+                </td>
+                <td>
+                    <Input id={category.id} placeholder='Kwota'
+                           onChange={this.handleIncomeValueChange}/>
+                </td>
+                <td></td>
+                <td>
+                    <Button size="sm">Dodaj</Button>
+                </td>
+            </tr>
             </tbody>
         });
 
@@ -121,11 +200,11 @@ class IncomeList extends Component {
                         </Button>{' '}
                         <Button color='light' onClick={() => this.increaseDate()}>
                             Nastepny miesiac
-                        </Button>{' '}
-                        <Button color='light' tag={Link} to="/incomes/new">Nowy wydatek</Button>
+                        </Button>
                     </div>
                     <div>
                         <Container>
+                            <Form id='incomesForm' onSubmit={this.handleSubmit}>
                             <Table className="mt-4" responsive hover>
                                 <thead>
                                 <tr>
@@ -137,6 +216,7 @@ class IncomeList extends Component {
                                 </thead>
                                 {incomeCategoryList}
                             </Table>
+                        </Form>
                         </Container>
                     </div>
                 </Container>

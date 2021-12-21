@@ -82,7 +82,7 @@ class ExpenseEdit extends Component {
 
     render() {
         const {item} = this.state;
-        const title = <h2>{item.id ? 'Edytuj wydatek' : 'Dodaj wydatek'}</h2>;
+        const title = <h2>Edytuj wydatek</h2>;
 
         return <div>
             <AppNavBar/>

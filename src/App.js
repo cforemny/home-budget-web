@@ -12,21 +12,33 @@ import MonthPlanner from "./panels/planner/MonthPlanner";
 
 
 class App extends Component {
+
+    getToken(){
+         let token = sessionStorage.getItem('token');
+
+         return token;
+    }
+
     render() {
-        return (
-            <Router>
-                <Switch>
-                    <Route path='/' exact={true} component={Home}/>
-                    <Route path='/expenses' exact={true} component={ExpenseList}/>
-                    <Route path='/expenses/:id' component={ExpenseEdit}/>
-                    <Route path='/incomes' exact={true} component={IncomeList}/>
-                    <Route path='/incomes/:id' component={IncomeEdit}/>
-                    <Route path='/admin-panel' exact={true} component={AdminPanel}/>
-                    <Route path='/summary' exact={true} component={SummaryPanel}/>
-                    <Route path='/planner' exact={true} component={MonthPlanner}/>
-                </Switch>
-            </Router>
+        if (this.getToken() === 'false') {
+            return (
+                <Home/>
         )
+        } else {
+            return (<Router>
+                    <Switch>
+                        <Route path='/' exact={true} component={Home}/>
+                        <Route path='/expenses' exact={true} component={ExpenseList}/>
+                        <Route path='/expenses/:id' component={ExpenseEdit}/>
+                        <Route path='/incomes' exact={true} component={IncomeList}/>
+                        <Route path='/incomes/:id' component={IncomeEdit}/>
+                        <Route path='/admin-panel' exact={true} component={AdminPanel}/>
+                        <Route path='/summary' exact={true} component={SummaryPanel}/>
+                        <Route path='/planner' exact={true} component={MonthPlanner}/>
+                    </Switch>
+                </Router>
+            )
+        }
     }
 }
 
