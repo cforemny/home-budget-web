@@ -160,6 +160,8 @@ class IncomeList extends Component {
                         </td>
                     </tr>
                 )
+            } else {
+                return null;
             }
         });
     }
@@ -168,7 +170,7 @@ class IncomeList extends Component {
         const {incomeCategories} = this.state;
         const incomeCategoryList = incomeCategories.map(category => {
             return <tbody>
-            <tr class="text-uppercase" key={category.id}>
+            <tr className="text-uppercase" key={category.id}>
                 <td>{category.description}</td>
             </tr>
             {this.renderTableData(category.id)}
@@ -205,18 +207,18 @@ class IncomeList extends Component {
                     <div>
                         <Container>
                             <Form id='incomesForm' onSubmit={this.handleSubmit}>
-                            <Table className="mt-4" responsive hover>
-                                <thead>
-                                <tr>
-                                    <th width="20%">Kategoria/Opis</th>
-                                    <th width="10%">Kwota</th>
-                                    <th width="20%">Data dodania</th>
-                                    <th width="30%">Akcja</th>
-                                </tr>
-                                </thead>
-                                {incomeCategoryList}
-                            </Table>
-                        </Form>
+                                <Table className="mt-4" responsive hover>
+                                    <thead>
+                                    <tr>
+                                        <th width="20%">Kategoria/Opis</th>
+                                        <th width="10%">Kwota</th>
+                                        <th width="20%">Data dodania</th>
+                                        <th width="30%">Akcja</th>
+                                    </tr>
+                                    </thead>
+                                    {incomeCategoryList}
+                                </Table>
+                            </Form>
                         </Container>
                     </div>
                 </Container>

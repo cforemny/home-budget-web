@@ -13,17 +13,15 @@ import MonthPlanner from "./panels/planner/MonthPlanner";
 
 class App extends Component {
 
-    getToken(){
-         let token = sessionStorage.getItem('token');
-
-         return token;
+    isUserValid() {
+        return sessionStorage.getItem('isUserValid');
     }
 
     render() {
-        if (this.getToken() === 'false') {
+        if (this.isUserValid() === 'false') {
             return (
                 <Home/>
-        )
+            )
         } else {
             return (<Router>
                     <Switch>

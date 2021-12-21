@@ -13,10 +13,6 @@ ChartJS.register(
 
 class MonthSummary extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const expensesSum = this.props.expensesSum;
         const incomesSum = this.props.incomesSum;

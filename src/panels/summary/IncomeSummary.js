@@ -6,10 +6,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 class IncomeSummary extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const incomes = this.props.incomes;
         const data = {

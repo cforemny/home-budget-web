@@ -76,13 +76,13 @@ class SummaryPanel extends Component {
     }
 
     fetchExpenseSummaryValue(year, month) {
-        let test = fetch('/expenses/summary?year=' + year + '&month=' + month)
+        fetch('/expenses/summary?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({expensesSum: data.value}));
     }
 
     fetchIncomesSummaryValue(year, month) {
-        let test = fetch('/incomes/summary?year=' + year + '&month=' + month)
+        fetch('/incomes/summary?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({incomesSum: data.value}));
     }
@@ -93,12 +93,12 @@ class SummaryPanel extends Component {
                 <AppNavBar/>
                 <h3>Podsumowanie miesiaca {this.state.month}-{this.state.year}</h3>
                 <div>
-                        <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
-                            miesiac
-                        </Button>{' '}
-                        <Button color='light' onClick={() => this.increaseDate()}>Nastepny
-                            miesiac
-                        </Button>
+                    <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
+                        miesiac
+                    </Button>{' '}
+                    <Button color='light' onClick={() => this.increaseDate()}>Nastepny
+                        miesiac
+                    </Button>
                 </div>
                 <Container fluid="sm">
                     <Row>
@@ -106,7 +106,8 @@ class SummaryPanel extends Component {
                         <Col>Rozkład przychodów <IncomeSummary incomes={this.state.incomes}/></Col>
                     </Row>
                     <Row>
-                        <Col><MonthSummary expensesSum={this.state.expensesSum} incomesSum={this.state.incomesSum} /></Col>
+                        <Col><MonthSummary expensesSum={this.state.expensesSum}
+                                           incomesSum={this.state.incomesSum}/></Col>
                     </Row>
                 </Container>
             </div>

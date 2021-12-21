@@ -100,6 +100,8 @@ class IncomePlanner extends Component {
                         </td>
                     </tr>
                 )
+            } else {
+                return null;
             }
         })
     }

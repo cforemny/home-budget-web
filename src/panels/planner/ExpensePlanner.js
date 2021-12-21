@@ -101,6 +101,8 @@ class ExpensePlanner extends Component {
                         </td>
                     </tr>
                 )
+            } else {
+                return null;
             }
         })
     }

@@ -37,8 +37,8 @@ class ExpenseList extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentDidMount() {
-        fetch('/expenses?year=' + this.state.year + '&month=' + this.state.month)
+     componentDidMount() {
+         fetch('/expenses?year=' + this.state.year + '&month=' + this.state.month)
             .then(response => response.json())
             .then(data => this.setState({expenses: data}));
         this.getExpenseCategories();
@@ -161,6 +161,8 @@ class ExpenseList extends Component {
                         </td>
                     </tr>
                 )
+            }else{
+                return null;
             }
         });
     }
@@ -169,7 +171,7 @@ class ExpenseList extends Component {
         const {expenseCategories} = this.state;
         const expenseCategoryList = expenseCategories.map(category => {
             return <tbody>
-            <tr class="text-uppercase" key={category.id}>
+            <tr className="text-uppercase" key={category.id}>
                 <td>{category.description}</td>
             </tr>
             {this.renderTableData(category.id)}

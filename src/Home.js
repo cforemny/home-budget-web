@@ -8,8 +8,8 @@ class Home extends Component {
         return (
             <div>
                 <AppNavBar/>
-                <div fluid class="d-flex justify-content-center">
-                    <p class="lead">
+                <div className="d-flex justify-content-center">
+                    <p className="lead">
                         <br/>
                         <br/>
                         „Zrobić budżet to wskazać swoim pieniądzom, dokąd mają iść,zamiast się zastanawiać, gdzie
@@ -17,7 +17,7 @@ class Home extends Component {
                         rozeszły” – John C. Maxwell.
                     </p>
                 </div>
-                <div fluid class="d-flex justify-content-center">
+                <div className="d-flex justify-content-center">
                     <Login/>
                 </div>
             </div>

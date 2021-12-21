@@ -1,47 +1,54 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
+import {useHistory} from "react-router-dom";
+import {Button, Form} from "reactstrap";
 
-async function loginUser(userName) {
-    return fetch('/login?user=' + userName, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-}
-
-export default function Login({ setToken }) {
+export default function Login() {
     const [username, setUserName] = useState();
+    const [password, setPassword] = useState();
+    const [validation, setIsValid] = useState();
 
-    const handleSubmit = async e => {
+    function verifyUser() {
+        // TODO: zrobic to chytrze, a nie w parametrach
+         fetch('/login?user=' + username + '&password=' + password, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => setIsValid(data.valid));
+    }
+    let history = useHistory();
+
+    const handleSubmit = e => {
         e.preventDefault();
-        if('cyp' === username){
-            sessionStorage.setItem('token', 'true');
-        }else {
-            sessionStorage.setItem('token', 'false');
+        verifyUser();
+        console.log(validation)
+        if (validation) {
+            sessionStorage.setItem('isUserValid', 'true');
+            history.push('/expenses')
+        } else {
+            sessionStorage.setItem('isUserValid', 'false');
         }
-
     }
 
-    return(
+
+
+    return (
         <div className="login-wrapper">
-            <form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
                 <label>
                     <p>Uzytkownik</p>
-                    <input type="text" onChange={e => setUserName(e.target.value)} />
+                    <input type="text" onChange={e => setUserName(e.target.value)}/>
                 </label>
-                {/*<label>*/}
-                {/*    <p>Haslo</p>*/}
-                {/*    <input type="password" onChange={e => setPassword(e.target.value)} />*/}
-                {/*</label>*/}
+                <label>
+                    <p>Haslo</p>
+                    <input type="password" onChange={e => setPassword(e.target.value)}/>
+                </label>
                 <div>
-                    <button type="submit">Submit</button>
+                    <Button color='light'>Login</Button>
                 </div>
-            </form>
+            </Form>
         </div>
     )
 }
-
-Login.propTypes = {
-    setToken: PropTypes.func.isRequired
-};

@@ -3,10 +3,6 @@ import {Container, Table} from "reactstrap";
 
 class BudgetRealization extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     componentDidUpdate(prevProps, prevState, snapshot) {
         this.setBudgetRealizationSummaryBackgroundColor();
     }
