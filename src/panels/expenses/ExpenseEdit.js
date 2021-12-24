@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import {Button, ButtonGroup, Container, Form, FormGroup, Input, Label} from 'reactstrap';
-import AppNavBar from '../AppNavBar';
+import AppNavBar from '../../AppNavBar';
 import axios from "axios";
 import Select from 'react-select'
 
-class IncomeEdit extends Component {
+class ExpenseEdit extends Component {
 
     category = {
         id: '',
@@ -13,11 +13,10 @@ class IncomeEdit extends Component {
     }
 
     emptyItem = {
-        description: '',
         value: '',
         additionalInformation: '',
         category: '',
-        insertDate:''
+        insertDate: ''
     };
 
     constructor(props) {
@@ -32,14 +31,14 @@ class IncomeEdit extends Component {
 
     async componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const income = await (await fetch(`/incomes/${this.props.match.params.id}`)).json();
-            this.setState({item: income});
+            const expense = await (await fetch(`/expenses/${this.props.match.params.id}`)).json();
+            this.setState({item: expense});
         }
-        this.getOptions();
+        await this.getOptions();
     }
 
     async getOptions() {
-        const res = await axios.get('/categories/income')
+        const res = await axios.get('/categories/expense')
         const data = res.data
 
         const options = data.map(d => ({
@@ -70,7 +69,7 @@ class IncomeEdit extends Component {
         event.preventDefault();
         const {item} = this.state;
 
-        await fetch('/incomes' + (item.id ? '/' + item.id : ''), {
+        await fetch('/expenses' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -78,12 +77,12 @@ class IncomeEdit extends Component {
             },
             body: JSON.stringify(item),
         });
-        this.props.history.push('/incomes');
+        this.props.history.push('/expenses');
     }
 
     render() {
         const {item} = this.state;
-        const title = <h2>Edytuj przychod</h2>;
+        const title = <h2>Edytuj wydatek</h2>;
 
         return <div>
             <AppNavBar/>
@@ -91,15 +90,15 @@ class IncomeEdit extends Component {
                 {title}
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
+                        <Label for="value">Kwota</Label>
+                        <Input type="number" name="value" id="value" value={item.value || ''}
+                               onChange={this.handleChange} autoComplete="value"/>
+                    </FormGroup>
+                    <FormGroup>
                         <Label for="category">Kategoria</Label>
                         <Select options={this.state.selectOptions}
                                 placeholder={item.category.description || 'Wybierz kategorie'}
                                 onChange={this.handleChange}/>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="value">Kwota</Label>
-                        <Input type="number" name="value" id="value" value={item.value || ''}
-                               onChange={this.handleChange} autoComplete="value"/>
                     </FormGroup>
                     <FormGroup>
                         <Label for="additionalInformation">Dodatkowe informacje</Label>
@@ -114,8 +113,8 @@ class IncomeEdit extends Component {
                                onChange={this.handleChange} autoComplete="insertDate"/>
                     </FormGroup>
                     <ButtonGroup>
-                        <Button color="primary" type="submit">Zapisz</Button>{' '}
-                        <Button color="secondary" tag={Link} to="/incomes">Anuluj</Button>
+                        <Button color="primary" type="submit">Zapisz</Button>
+                        <Button color="secondary" tag={Link} to="/expenses">Anuluj</Button>
                     </ButtonGroup>
                 </Form>
             </Container>
@@ -123,4 +122,4 @@ class IncomeEdit extends Component {
     }
 }
 
-export default withRouter(IncomeEdit);
+export default withRouter(ExpenseEdit);

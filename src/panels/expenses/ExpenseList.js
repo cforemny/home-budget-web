@@ -1,17 +1,19 @@
 import React, {Component} from 'react';
 import {Button, Container, Input, Table} from 'reactstrap';
-import AppNavBar from '../AppNavBar';
+import AppNavBar from '../../AppNavBar';
 import {Link} from 'react-router-dom';
 import Form from "reactstrap/es/Form";
 
-class IncomeList extends Component {
+
+class ExpenseList extends Component {
+
 
     category = {
         id: '',
         description: ''
     }
 
-    income = {
+    expense = {
         id: '',
         additionalInformation: '',
         value: '',
@@ -23,41 +25,41 @@ class IncomeList extends Component {
         let today = new Date();
         super(props);
         this.state = {
-            incomes: [],
+            expenses: [],
             month: today.getMonth() + 1,
             year: today.getFullYear(),
-            item: this.income,
-            incomeCategories: []
+            item: this.expense,
+            expenseCategories: []
         };
         this.remove = this.remove.bind(this);
-        this.handleIncomeDescriptionChange = this.handleIncomeDescriptionChange.bind(this);
-        this.handleIncomeValueChange = this.handleIncomeValueChange.bind(this);
+        this.handleExpenseDescriptionChange = this.handleExpenseDescriptionChange.bind(this);
+        this.handleExpenseValueChange = this.handleExpenseValueChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentDidMount() {
-        fetch('/incomes?year=' + this.state.year + '&month=' + this.state.month)
+     componentDidMount() {
+         fetch('/expenses?year=' + this.state.year + '&month=' + this.state.month)
             .then(response => response.json())
-            .then(data => this.setState({incomes: data}));
-        this.getIncomeCategories();
+            .then(data => this.setState({expenses: data}));
+        this.getExpenseCategories();
     }
 
-    getIncomeCategories() {
-        fetch('/categories/income')
+    getExpenseCategories() {
+        fetch('/categories/expense')
             .then(response => response.json())
-            .then(data => this.setState({incomeCategories: data}));
+            .then(data => this.setState({expenseCategories: data}));
     }
 
     async remove(id) {
-        await fetch(`/incomes/${id}`, {
+        await fetch(`/expenses/${id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
         }).then(() => {
-            let updatedIncomes = [...this.state.incomes].filter(i => i.id !== id);
-            this.setState({incomes: updatedIncomes});
+            let updatedExpenses = [...this.state.expenses].filter(i => i.id !== id);
+            this.setState({expenses: updatedExpenses});
         });
     }
 
@@ -68,15 +70,15 @@ class IncomeList extends Component {
             let nextYear = actualYear + 1
             this.setState({year: nextYear})
             this.setState({month: 1})
-            fetch('/incomes?year=' + nextYear + '&month=' + 1)
+            fetch('/expenses?year=' + nextYear + '&month=' + 1)
                 .then(response => response.json())
-                .then(data => this.setState({incomes: data}));
+                .then(data => this.setState({expenses: data}));
         } else {
             let nextMonth = actualMonth + 1;
             this.setState({month: nextMonth})
-            fetch('/incomes?year=' + this.state.year + '&month=' + nextMonth)
+            fetch('/expenses?year=' + this.state.year + '&month=' + nextMonth)
                 .then(response => response.json())
-                .then(data => this.setState({incomes: data}));
+                .then(data => this.setState({expenses: data}));
         }
     }
 
@@ -87,23 +89,22 @@ class IncomeList extends Component {
             let previousYear = actualYear - 1
             this.setState({year: previousYear})
             this.setState({month: 12})
-            fetch('/incomes?year=' + previousYear + '&month=' + 12)
+            fetch('/expenses?year=' + previousYear + '&month=' + 12)
                 .then(response => response.json())
-                .then(data => this.setState({incomes: data}));
+                .then(data => this.setState({expenses: data}));
         } else {
             let previousMonth = actualMonth - 1;
             this.setState({month: previousMonth})
-            fetch('/incomes?year=' + this.state.year + '&month=' + previousMonth)
+            fetch('/expenses?year=' + this.state.year + '&month=' + previousMonth)
                 .then(response => response.json())
-                .then(data => this.setState({incomes: data}));
+                .then(data => this.setState({expenses: data}));
         }
     }
-
 
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('/incomes',
+        await fetch('/expenses',
             {
                 method: 'POST',
                 headers: {
@@ -113,11 +114,11 @@ class IncomeList extends Component {
                 body: JSON.stringify(item),
             });
         this.setState({item: this.plannedExpense});
-        document.getElementById('incomesForm').reset()
+        document.getElementById('expensesForm').reset()
         window.location.reload(false);
     }
 
-    handleIncomeDescriptionChange(event) {
+    handleExpenseDescriptionChange(event) {
         let item;
         const target = event.target;
         item = {
@@ -131,7 +132,7 @@ class IncomeList extends Component {
         this.setState({item});
     }
 
-    handleIncomeValueChange(event) {
+    handleExpenseValueChange(event) {
         let item;
         const target = event.target;
         item = {
@@ -146,29 +147,29 @@ class IncomeList extends Component {
     }
 
     renderTableData(categoryId) {
-        return this.state.incomes.map(income => {
-            if (categoryId === income.category.id) {
+        return this.state.expenses.map(expense => {
+            if (categoryId === expense.category.id) {
                 return (
-                    <tr key={income.id}>
-                        <td>{income.additionalInformation}</td>
-                        <td>{income.value} zł</td>
-                        <td>{income.insertDate}</td>
+                    <tr key={expense.id}>
+                        <td>{expense.additionalInformation}</td>
+                        <td>{expense.value} zł</td>
+                        <td>{expense.insertDate}</td>
                         <td>
                             <Button size="sm" color="primary" tag={Link}
-                                    to={"/incomes/" + income.id}>Edytuj</Button>{' '}
-                            <Button size="sm" color="danger" onClick={() => this.remove(income.id)}>Usun</Button>
+                                    to={"/expenses/" + expense.id}>Edytuj</Button>{' '}
+                            <Button size="sm" color="danger" onClick={() => this.remove(expense.id)}>Usun</Button>
                         </td>
                     </tr>
                 )
-            } else {
+            }else{
                 return null;
             }
         });
     }
 
     render() {
-        const {incomeCategories} = this.state;
-        const incomeCategoryList = incomeCategories.map(category => {
+        const {expenseCategories} = this.state;
+        const expenseCategoryList = expenseCategories.map(category => {
             return <tbody>
             <tr className="text-uppercase" key={category.id}>
                 <td>{category.description}</td>
@@ -177,11 +178,11 @@ class IncomeList extends Component {
             <tr>
                 <td>
                     <Input id={category.id} placeholder='Opis'
-                           onChange={this.handleIncomeDescriptionChange}/>
+                           onChange={this.handleExpenseDescriptionChange}/>
                 </td>
                 <td>
                     <Input id={category.id} placeholder='Kwota'
-                           onChange={this.handleIncomeValueChange}/>
+                           onChange={this.handleExpenseValueChange}/>
                 </td>
                 <td></td>
                 <td>
@@ -195,19 +196,19 @@ class IncomeList extends Component {
             <div>
                 <AppNavBar/>
                 <Container fluid>
-                    <h3>Przychody {this.state.month}-{this.state.year}</h3>
+                    <h3>Wydatki {this.state.month}-{this.state.year}</h3>
                     <div>
-                        <Button color='light' onClick={() => this.decreaseDate()}>
-                            Poprzedni miesiac
+                        <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
+                            miesiac
                         </Button>{' '}
-                        <Button color='light' onClick={() => this.increaseDate()}>
-                            Nastepny miesiac
+                        <Button color='light' onClick={() => this.increaseDate()}>Nastepny
+                            miesiac
                         </Button>
                     </div>
                     <div>
                         <Container>
-                            <Form id='incomesForm' onSubmit={this.handleSubmit}>
-                                <Table className="mt-4" responsive hover>
+                            <Form id='expensesForm' onSubmit={this.handleSubmit}>
+                                <Table hover className="mt-4">
                                     <thead>
                                     <tr>
                                         <th width="20%">Kategoria/Opis</th>
@@ -216,7 +217,7 @@ class IncomeList extends Component {
                                         <th width="30%">Akcja</th>
                                     </tr>
                                     </thead>
-                                    {incomeCategoryList}
+                                    {expenseCategoryList}
                                 </Table>
                             </Form>
                         </Container>
@@ -227,4 +228,4 @@ class IncomeList extends Component {
     }
 }
 
-export default IncomeList;
+export default ExpenseList;

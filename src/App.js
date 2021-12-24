@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import './App.css';
 import Home from './Home';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import ExpenseList from './lists/ExpenseList';
-import ExpenseEdit from "./editors/ExpenseEdit";
-import IncomeList from "./lists/IncomeList";
-import IncomeEdit from "./editors/IncomeEdit";
+import ExpenseList from './panels/expenses/ExpenseList';
+import ExpenseEdit from "./panels/expenses/ExpenseEdit";
+import IncomeList from "./panels/incomes/IncomeList";
+import IncomeEdit from "./panels/incomes/IncomeEdit";
 import AdminPanel from "./panels/AdminPanel";
 import SummaryPanel from "./panels/summary/SummaryPanel";
 import MonthPlanner from "./panels/planner/MonthPlanner";
@@ -14,6 +14,8 @@ import MonthPlanner from "./panels/planner/MonthPlanner";
 class App extends Component {
 
     isUserValid() {
+        let isValid = sessionStorage.getItem('isUserValid');
+        console.log('w App: ' + isValid)
         return sessionStorage.getItem('isUserValid');
     }
 

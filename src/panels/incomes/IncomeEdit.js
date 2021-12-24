@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import {Button, ButtonGroup, Container, Form, FormGroup, Input, Label} from 'reactstrap';
-import AppNavBar from '../AppNavBar';
+import AppNavBar from '../../AppNavBar';
 import axios from "axios";
 import Select from 'react-select'
 
-class ExpenseEdit extends Component {
+class IncomeEdit extends Component {
 
     category = {
         id: '',
@@ -13,10 +13,11 @@ class ExpenseEdit extends Component {
     }
 
     emptyItem = {
+        description: '',
         value: '',
         additionalInformation: '',
         category: '',
-        insertDate: ''
+        insertDate:''
     };
 
     constructor(props) {
@@ -31,14 +32,14 @@ class ExpenseEdit extends Component {
 
     async componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const expense = await (await fetch(`/expenses/${this.props.match.params.id}`)).json();
-            this.setState({item: expense});
+            const income = await (await fetch(`/incomes/${this.props.match.params.id}`)).json();
+            this.setState({item: income});
         }
-        await this.getOptions();
+        this.getOptions();
     }
 
     async getOptions() {
-        const res = await axios.get('/categories/expense')
+        const res = await axios.get('/categories/income')
         const data = res.data
 
         const options = data.map(d => ({
@@ -69,7 +70,7 @@ class ExpenseEdit extends Component {
         event.preventDefault();
         const {item} = this.state;
 
-        await fetch('/expenses' + (item.id ? '/' + item.id : ''), {
+        await fetch('/incomes' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -77,12 +78,12 @@ class ExpenseEdit extends Component {
             },
             body: JSON.stringify(item),
         });
-        this.props.history.push('/expenses');
+        this.props.history.push('/incomes');
     }
 
     render() {
         const {item} = this.state;
-        const title = <h2>Edytuj wydatek</h2>;
+        const title = <h2>Edytuj przychod</h2>;
 
         return <div>
             <AppNavBar/>
@@ -90,15 +91,15 @@ class ExpenseEdit extends Component {
                 {title}
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
-                        <Label for="value">Kwota</Label>
-                        <Input type="number" name="value" id="value" value={item.value || ''}
-                               onChange={this.handleChange} autoComplete="value"/>
-                    </FormGroup>
-                    <FormGroup>
                         <Label for="category">Kategoria</Label>
                         <Select options={this.state.selectOptions}
                                 placeholder={item.category.description || 'Wybierz kategorie'}
                                 onChange={this.handleChange}/>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="value">Kwota</Label>
+                        <Input type="number" name="value" id="value" value={item.value || ''}
+                               onChange={this.handleChange} autoComplete="value"/>
                     </FormGroup>
                     <FormGroup>
                         <Label for="additionalInformation">Dodatkowe informacje</Label>
@@ -113,8 +114,8 @@ class ExpenseEdit extends Component {
                                onChange={this.handleChange} autoComplete="insertDate"/>
                     </FormGroup>
                     <ButtonGroup>
-                        <Button color="primary" type="submit">Zapisz</Button>
-                        <Button color="secondary" tag={Link} to="/expenses">Anuluj</Button>
+                        <Button color="primary" type="submit">Zapisz</Button>{' '}
+                        <Button color="secondary" tag={Link} to="/incomes">Anuluj</Button>
                     </ButtonGroup>
                 </Form>
             </Container>
@@ -122,4 +123,4 @@ class ExpenseEdit extends Component {
     }
 }
 
-export default withRouter(ExpenseEdit);
+export default withRouter(IncomeEdit);

@@ -1,54 +1,78 @@
-import React, {useState} from 'react';
-import {useHistory} from "react-router-dom";
-import {Button, Form} from "reactstrap";
+import './Login.css';
+import React, {Component} from 'react';
+import {Button, Form, FormGroup, Input, Label} from "reactstrap";
 
-export default function Login() {
-    const [username, setUserName] = useState();
-    const [password, setPassword] = useState();
-    const [validation, setIsValid] = useState();
+class Login extends Component {
 
-    function verifyUser() {
+    constructor(props) {
+        super(props);
+        this.state = {
+            userName: '',
+            password: '',
+            cyp: false
+        }
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.changePassword = this.changePassword.bind(this);
+        this.changeUsername = this.changeUsername.bind(this);
+    }
+
+     verifyUser() {
         // TODO: zrobic to chytrze, a nie w parametrach
-         fetch('/login?user=' + username + '&password=' + password, {
+        return fetch('/login?user=' + this.state.userName + '&password=' + this.state.password, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
             .then(response => response.json())
-            .then(data => setIsValid(data.valid));
+            .then(data => {
+                return data.valid
+            });
     }
-    let history = useHistory();
 
-    const handleSubmit = e => {
+
+    async handleSubmit(e) {
         e.preventDefault();
-        verifyUser();
-        console.log(validation)
-        if (validation) {
+        let val = await this.verifyUser();
+        console.log('w Login' + val)
+        if (val) {
             sessionStorage.setItem('isUserValid', 'true');
-            history.push('/expenses')
         } else {
             sessionStorage.setItem('isUserValid', 'false');
         }
     }
 
+    changePassword(e) {
+        e.preventDefault();
+        this.setState({password: e.target.value})
+    }
 
+    changeUsername(e) {
+        e.preventDefault();
+        this.setState({userName: e.target.value})
+    }
 
-    return (
-        <div className="login-wrapper">
-            <Form onSubmit={handleSubmit}>
-                <label>
-                    <p>Uzytkownik</p>
-                    <input type="text" onChange={e => setUserName(e.target.value)}/>
-                </label>
-                <label>
-                    <p>Haslo</p>
-                    <input type="password" onChange={e => setPassword(e.target.value)}/>
-                </label>
-                <div>
-                    <Button color='light'>Login</Button>
+    render() {
+        return (
+            <div>
+                <div className="login-wrapper">
+                    <Form className="form" onSubmit={this.handleSubmit}>
+                        <FormGroup>
+                            <Label>Użytkownik </Label>
+                            <Input type="text" onChange={this.changeUsername}/>
+                            <label>
+                                <p>Hasło</p>
+                                <Input type="password" onChange={this.changePassword}/>
+                            </label>
+                            <div>
+                                <Button>Zaloguj</Button>
+                            </div>
+                        </FormGroup>
+                    </Form>
                 </div>
-            </Form>
-        </div>
-    )
+            </div>
+        )
+    }
 }
+
+export default Login
