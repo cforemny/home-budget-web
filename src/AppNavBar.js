@@ -20,6 +20,11 @@ export default class AppNavBar extends Component {
         });
     }
 
+    logout() {
+        sessionStorage.setItem('isUserValid', 'false');
+        window.location.reload(false);
+    }
+
     render() {
         return (
             <div>
@@ -44,6 +49,9 @@ export default class AppNavBar extends Component {
                             </NavItem>
                             <NavItem>
                                 <NavLink href="/admin-panel">Panel administratora</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink onClick={this.logout}>Wyloguj</NavLink>
                             </NavItem>
                             {/*moze sie przyda*/}
                             {/*<UncontrolledDropdown nav inNavbar>*/}

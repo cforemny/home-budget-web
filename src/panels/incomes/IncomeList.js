@@ -169,7 +169,7 @@ class IncomeList extends Component {
     render() {
         const {incomeCategories} = this.state;
         const incomeCategoryList = incomeCategories.map(category => {
-            return <tbody>
+            return <tbody key={category.description}>
             <tr className="text-uppercase" key={category.id}>
                 <td>{category.description}</td>
             </tr>

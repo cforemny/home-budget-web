@@ -20,9 +20,7 @@ class IncomePlanner extends Component {
 
     constructor(props) {
         super(props);
-        let today = new Date();
         this.state = {
-            currentDate: today,
             item: this.plannedIncome
         }
         this.handleIncomeDescriptionChange = this.handleIncomeDescriptionChange.bind(this);
@@ -44,7 +42,7 @@ class IncomePlanner extends Component {
             });
         this.setState({item: this.plannedIncome});
         document.getElementById('incomesForm').reset()
-        window.location.reload(false);
+        // window.location.reload(false);
     }
 
     async remove(id) {
@@ -62,10 +60,13 @@ class IncomePlanner extends Component {
     handleIncomeDescriptionChange(event) {
         let item;
         const target = event.target;
+        let date = new Date();
+        date.setMonth(this.props.month - 1)
+        date.setFullYear(this.props.year)
         item = {
             value: this.state.item.value,
             description: target.value,
-            insertDate: this.state.currentDate,
+            insertDate: date,
             category: {
                 id: target.id
             }
@@ -76,10 +77,13 @@ class IncomePlanner extends Component {
     handleIncomeValueChange(event) {
         let item;
         const target = event.target;
+        let date = new Date();
+        date.setMonth(this.props.month - 1)
+        date.setFullYear(this.props.year)
         item = {
             value: target.value,
             description: this.state.item.description,
-            insertDate: this.state.currentDate,
+            insertDate: date,
             category: {
                 id: target.id
             }
@@ -109,12 +113,12 @@ class IncomePlanner extends Component {
     render() {
         const {incomesCategories} = this.props;
         const incomesCategoryList = incomesCategories.map(category => {
-            return <tbody>
+            return <tbody key={category.description}>
             <tr key={category.id}>
                 <td>{category.description}</td>
             </tr>
             {this.renderTableData(category.id)}
-            <tr>
+            <tr key="incomeInputRow">
                 <td>
                     <Input id={category.id} placeholder='Opis'
                            onChange={this.handleIncomeDescriptionChange}/>
@@ -134,7 +138,7 @@ class IncomePlanner extends Component {
             <div>
                 <Container>
                     <Form id='incomesForm' onSubmit={this.handleSubmit}>
-                        <Table stripped hover className="mt-4">
+                        <Table hover className="mt-4">
                             <thead>
                             <tr>
                                 <th> Opis/Kategoria</th>

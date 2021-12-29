@@ -37,8 +37,10 @@ class Login extends Component {
         console.log('w Login' + val)
         if (val) {
             sessionStorage.setItem('isUserValid', 'true');
+            window.location.reload(false);
         } else {
             sessionStorage.setItem('isUserValid', 'false');
+            window.location.reload(false);
         }
     }
 

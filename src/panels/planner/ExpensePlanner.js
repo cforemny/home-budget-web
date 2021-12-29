@@ -21,6 +21,7 @@ class ExpensePlanner extends Component {
     constructor(props) {
         super(props);
         let today = new Date();
+        today.setFullYear(this.props.year, this.props.month )
         this.state = {
             currentDate: today,
             item: this.plannedExpense,
@@ -110,12 +111,12 @@ class ExpensePlanner extends Component {
     render() {
         const {expenseCategories} = this.props;
         const expenseCategoryList = expenseCategories.map(category => {
-            return <tbody>
+            return <tbody key={category.description}>
             <tr key={category.id}>
                 <td>{category.description}</td>
             </tr>
             {this.renderTableData(category.id)}
-            <tr>
+            <tr key="expenseInputRow">
                 <td>
                     <Input id={category.id} laceholder='Opis'
                            onChange={this.handleExpenseDescriptionChange}/>
@@ -135,12 +136,12 @@ class ExpensePlanner extends Component {
             <div>
                 <Container>
                     <Form id='expensesForm' onSubmit={this.handleSubmit}>
-                        <Table stripped hover className="mt-4">
+                        <Table hover>
                             <thead>
                             <tr>
                                 <th> Opis/Kategoria</th>
                                 <th> Planowana wysokość wydatku</th>
-                                <th>Akcja</th>
+                                <th> Akcja</th>
                             </tr>
                             </thead>
                             {expenseCategoryList}

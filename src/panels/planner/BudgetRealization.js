@@ -25,9 +25,11 @@ class BudgetRealization extends Component {
                 <div>
                     <Table responsive hover>
                         <thead>
-                        <th>
-                            Stopien realizacji budzetu
-                        </th>
+                        <tr>
+                            <th>
+                                Stopien realizacji budzetu
+                            </th>
+                        </tr>
                         </thead>
                         <tbody>
                         <tr>

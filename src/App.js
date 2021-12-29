@@ -14,8 +14,6 @@ import MonthPlanner from "./panels/planner/MonthPlanner";
 class App extends Component {
 
     isUserValid() {
-        let isValid = sessionStorage.getItem('isUserValid');
-        console.log('w App: ' + isValid)
         return sessionStorage.getItem('isUserValid');
     }
 
@@ -27,7 +25,7 @@ class App extends Component {
         } else {
             return (<Router>
                     <Switch>
-                        <Route path='/' exact={true} component={Home}/>
+                        <Route path='/' exact={true} component={ExpenseList}/>
                         <Route path='/expenses' exact={true} component={ExpenseList}/>
                         <Route path='/expenses/:id' component={ExpenseEdit}/>
                         <Route path='/incomes' exact={true} component={IncomeList}/>

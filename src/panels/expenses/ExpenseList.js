@@ -170,12 +170,12 @@ class ExpenseList extends Component {
     render() {
         const {expenseCategories} = this.state;
         const expenseCategoryList = expenseCategories.map(category => {
-            return <tbody>
+            return <tbody key={category.description}>
             <tr className="text-uppercase" key={category.id}>
                 <td>{category.description}</td>
             </tr>
             {this.renderTableData(category.id)}
-            <tr>
+            <tr >
                 <td>
                     <Input id={category.id} placeholder='Opis'
                            onChange={this.handleExpenseDescriptionChange}/>
