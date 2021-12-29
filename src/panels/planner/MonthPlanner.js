@@ -16,22 +16,14 @@ class MonthPlanner extends Component {
             month: today.getMonth() + 1,
             year: today.getFullYear(),
             activeTab: 'expenses',
-            expenseCategories: [],
-            incomeCategories: [],
-            plannedExpenses: [],
-            plannedIncomes: [],
             expenseSummary: 0,
             incomesSummary: 0
         }
     }
 
     componentDidMount() {
-        this.getPlannedExpenses(this.state.year, this.state.month);
-        this.getPlannedIncomes(this.state.year, this.state.month)
         this.getExpenseSummary(this.state.year, this.state.month);
         this.getIncomeSummary(this.state.year, this.state.month);
-        this.getExpenseCategories();
-        this.getIncomeCategories();
     }
 
     getExpenseSummary(year, month) {
@@ -46,18 +38,6 @@ class MonthPlanner extends Component {
             .then(data => this.setState({incomesSummary: data}));
     }
 
-    getExpenseCategories() {
-        fetch('/categories/expense')
-            .then(response => response.json())
-            .then(data => this.setState({expenseCategories: data}));
-    }
-
-    getIncomeCategories() {
-        fetch('/categories/income')
-            .then(response => response.json())
-            .then(data => this.setState({incomeCategories: data}));
-    }
-
     increaseDate() {
         let actualYear = this.state.year
         let actualMonth = this.state.month
@@ -65,15 +45,11 @@ class MonthPlanner extends Component {
             let nextYear = actualYear + 1
             this.setState({year: nextYear})
             this.setState({month: 1})
-            this.getPlannedExpenses(nextYear, 1)
-            this.getPlannedIncomes(nextYear, 1)
-            this.getExpenseSummary(nextYear, 1)
             this.getIncomeSummary(nextYear, 1)
+            this.getExpenseSummary(nextYear, 1)
         } else {
             let nextMonth = actualMonth + 1;
             this.setState({month: nextMonth})
-            this.getPlannedExpenses(this.state.year, nextMonth)
-            this.getPlannedIncomes(this.state.year, nextMonth)
             this.getExpenseSummary(this.state.year, nextMonth)
             this.getIncomeSummary(this.state.year, nextMonth)
         }
@@ -86,30 +62,14 @@ class MonthPlanner extends Component {
             let previousYear = actualYear - 1
             this.setState({year: previousYear})
             this.setState({month: 12})
-            this.getPlannedExpenses(previousYear, 12)
-            this.getPlannedIncomes(previousYear, 12)
             this.getExpenseSummary(previousYear, 12)
             this.getIncomeSummary(previousYear, 12)
         } else {
             let previousMonth = actualMonth - 1;
             this.setState({month: previousMonth})
-            this.getPlannedExpenses(this.state.year, previousMonth)
-            this.getPlannedIncomes(this.state.year, previousMonth)
             this.getExpenseSummary(this.state.year, previousMonth)
             this.getIncomeSummary(this.state.year, previousMonth)
         }
-    }
-
-    getPlannedExpenses(year, month) {
-        fetch('/planner/expenses?year=' + year + '&month=' + month)
-            .then(response => response.json())
-            .then(data => this.setState({plannedExpenses: data}));
-    }
-
-    getPlannedIncomes(year, month) {
-        fetch('/planner/incomes?year=' + year + '&month=' + month)
-            .then(response => response.json())
-            .then(data => this.setState({plannedIncomes: data}));
     }
 
     render() {
@@ -142,16 +102,12 @@ class MonthPlanner extends Component {
                             <TabPane tabId="expenses">
                                 <Row>
                                     <Col>
-                                        <ExpensePlanner year={this.state.year} month={this.state.month}
-                                                        plannedExpenses={this.state.plannedExpenses}
-                                                        expenseCategories={this.state.expenseCategories}/>
+                                        <ExpensePlanner year={this.state.year} month={this.state.month}/>
                                     </Col>
                                 </Row>
                             </TabPane>
                             <TabPane tabId="incomes">
-                                <IncomePlanner year={this.state.year} month={this.state.month}
-                                               plannedIncomes={this.state.plannedIncomes}
-                                               incomesCategories={this.state.incomeCategories}/>
+                                <IncomePlanner year={this.state.year} month={this.state.month}/>
                             </TabPane>
                         </TabContent>
                     </div>

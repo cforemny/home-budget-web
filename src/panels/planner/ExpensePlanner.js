@@ -25,11 +25,35 @@ class ExpensePlanner extends Component {
         this.state = {
             currentDate: today,
             item: this.plannedExpense,
-            expenseSummary: 0
+            plannedExpenses : [],
+            expenseCategories: []
         }
         this.handleExpenseDescriptionChange = this.handleExpenseDescriptionChange.bind(this);
         this.handleExpenseValueChange = this.handleExpenseValueChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        this.getPlannedExpenses(this.props.year, this.props.month)
+        this.getExpenseCategories();
+    }
+
+    componentDidUpdate(prevState) {
+        if(prevState.month !== this.props.month){
+            this.getPlannedExpenses(this.props.year, this.props.month)
+        }
+    }
+
+    getExpenseCategories() {
+        fetch('/categories/expense')
+            .then(response => response.json())
+            .then(data => this.setState({expenseCategories: data}));
+    }
+
+    getPlannedExpenses(year, month) {
+        fetch('/planner/expenses?year=' + year + '&month=' + month)
+            .then(response => response.json())
+            .then(data => this.setState({plannedExpenses: data}));
     }
 
     async handleSubmit(event) {
@@ -46,7 +70,8 @@ class ExpensePlanner extends Component {
             });
         this.setState({item: this.plannedExpense});
         document.getElementById('expensesForm').reset()
-        window.location.reload(false);
+        this.getPlannedExpenses(this.props.year, this.props.month)
+        this.getExpenseCategories();
     }
 
     async remove(id) {
@@ -58,16 +83,19 @@ class ExpensePlanner extends Component {
                 }
             }
         )
-        window.location.reload(false);
+        this.getPlannedExpenses(this.props.year, this.props.month)
     }
 
     handleExpenseDescriptionChange(event) {
         let item;
         const target = event.target;
+        let date = new Date();
+        date.setMonth(this.props.month - 1)
+        date.setFullYear(this.props.year)
         item = {
             value: this.state.item.value,
             description: target.value,
-            insertDate: this.state.currentDate,
+            insertDate: date,
             category: {
                 id: target.id
             }
@@ -78,10 +106,13 @@ class ExpensePlanner extends Component {
     handleExpenseValueChange(event) {
         let item;
         const target = event.target;
+        let date = new Date();
+        date.setMonth(this.props.month - 1)
+        date.setFullYear(this.props.year)
         item = {
             value: target.value,
             description: this.state.item.description,
-            insertDate: this.state.currentDate,
+            insertDate: date,
             category: {
                 id: target.id
             }
@@ -90,7 +121,7 @@ class ExpensePlanner extends Component {
     }
 
     renderTableData(categoryId) {
-        return this.props.plannedExpenses.map((plannedExpense) => {
+        return this.state.plannedExpenses.map((plannedExpense) => {
             const {id, value, description, category} = plannedExpense
             if (categoryId === category.id) {
                 return (
@@ -109,7 +140,7 @@ class ExpensePlanner extends Component {
     }
 
     render() {
-        const {expenseCategories} = this.props;
+        const {expenseCategories} = this.state;
         const expenseCategoryList = expenseCategories.map(category => {
             return <tbody key={category.description}>
             <tr key={category.id}>

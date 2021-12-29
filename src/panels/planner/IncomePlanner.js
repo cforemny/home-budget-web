@@ -21,11 +21,37 @@ class IncomePlanner extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: this.plannedIncome
+            item: this.plannedIncome,
+            plannedIncomes: [],
+            incomeCategories: []
         }
         this.handleIncomeDescriptionChange = this.handleIncomeDescriptionChange.bind(this);
         this.handleIncomeValueChange = this.handleIncomeValueChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        this.getPlannedIncomes(this.props.year, this.props.month)
+        this.getIncomeCategories();
+    }
+
+    componentDidUpdate(prevState) {
+        if(prevState.month !== this.props.month){
+            this.getPlannedIncomes(this.props.year, this.props.month)
+            this.getIncomeCategories();
+        }
+    }
+
+    getIncomeCategories() {
+        fetch('/categories/income')
+            .then(response => response.json())
+            .then(data => this.setState({incomeCategories: data}));
+    }
+
+    getPlannedIncomes(year, month) {
+        fetch('/planner/incomes?year=' + year + '&month=' + month)
+            .then(response => response.json())
+            .then(data => this.setState({plannedIncomes: data}));
     }
 
     async handleSubmit(event) {
@@ -40,9 +66,10 @@ class IncomePlanner extends Component {
                 },
                 body: JSON.stringify(item),
             });
-        this.setState({item: this.plannedIncome});
+        this.setState({item: this.plannedIncome})
         document.getElementById('incomesForm').reset()
-        // window.location.reload(false);
+        this.getPlannedIncomes(this.props.year, this.props.month)
+        this.getIncomeCategories();
     }
 
     async remove(id) {
@@ -54,7 +81,7 @@ class IncomePlanner extends Component {
                 }
             }
         )
-        window.location.reload(false);
+        this.getPlannedIncomes(this.props.year, this.props.month)
     }
 
     handleIncomeDescriptionChange(event) {
@@ -92,7 +119,7 @@ class IncomePlanner extends Component {
     }
 
     renderTableData(categoryId) {
-        return this.props.plannedIncomes.map((plannedIncome) => {
+        return this.state.plannedIncomes.map((plannedIncome) => {
             const {id, value, description, category} = plannedIncome
             if (categoryId === category.id) {
                 return (
@@ -111,7 +138,7 @@ class IncomePlanner extends Component {
     }
 
     render() {
-        const {incomesCategories} = this.props;
+        const incomesCategories = this.state.incomeCategories;
         const incomesCategoryList = incomesCategories.map(category => {
             return <tbody key={category.description}>
             <tr key={category.id}>
