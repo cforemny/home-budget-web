@@ -27,7 +27,7 @@ class BudgetRealization extends Component {
                         <thead>
                         <tr>
                             <th>
-                                Stopien realizacji budzetu
+                                Całkowity stopień realizacji budzetu
                             </th>
                         </tr>
                         </thead>

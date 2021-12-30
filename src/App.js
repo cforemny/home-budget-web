@@ -13,12 +13,20 @@ import MonthPlanner from "./panels/planner/MonthPlanner";
 
 class App extends Component {
 
-    isUserValid() {
-        return sessionStorage.getItem('isUserValid');
+    constructor(props) {
+        super(props);
+        this.state = {
+            isUserValid: 'false'
+        }
+    }
+
+    componentDidMount() {
+        this.setState({isUserValid: sessionStorage.getItem('isUserValid')});
     }
 
     render() {
-        if (this.isUserValid() === 'false') {
+        console.log(this.state.isUserValid)
+        if (this.state.isUserValid !== 'true') {
             return (
                 <Home/>
             )

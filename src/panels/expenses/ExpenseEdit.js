@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
-import {Button, ButtonGroup, Container, Form, FormGroup, Input, Label} from 'reactstrap';
+import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 import AppNavBar from '../../AppNavBar';
 import axios from "axios";
 import Select from 'react-select'
@@ -112,10 +112,8 @@ class ExpenseEdit extends Component {
                                value={item.insertDate || ''}
                                onChange={this.handleChange} autoComplete="insertDate"/>
                     </FormGroup>
-                    <ButtonGroup>
-                        <Button color="primary" type="submit">Zapisz</Button>
+                        <Button color="primary" type="submit">Zapisz</Button>{' '}
                         <Button color="secondary" tag={Link} to="/expenses">Anuluj</Button>
-                    </ButtonGroup>
                 </Form>
             </Container>
         </div>

@@ -149,7 +149,7 @@ class ExpensePlanner extends Component {
             {this.renderTableData(category.id)}
             <tr key="expenseInputRow">
                 <td>
-                    <Input id={category.id} laceholder='Opis'
+                    <Input id={category.id} placeholder='Opis'
                            onChange={this.handleExpenseDescriptionChange}/>
                 </td>
                 <td>
