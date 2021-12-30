@@ -9,7 +9,7 @@ import IncomeEdit from "./panels/incomes/IncomeEdit";
 import AdminPanel from "./panels/AdminPanel";
 import SummaryPanel from "./panels/summary/SummaryPanel";
 import MonthPlanner from "./panels/planner/MonthPlanner";
-
+import AccountSummary from "./panels/accounts/AccountSummary";
 
 class App extends Component {
 
@@ -41,6 +41,7 @@ class App extends Component {
                         <Route path='/admin-panel' exact={true} component={AdminPanel}/>
                         <Route path='/summary' exact={true} component={SummaryPanel}/>
                         <Route path='/planner' exact={true} component={MonthPlanner}/>
+                        <Route path='/accounts' exact={true} component={AccountSummary}/>
                     </Switch>
                 </Router>
             )

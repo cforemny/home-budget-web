@@ -1,4 +1,3 @@
-import './Login.css';
 import React, {Component} from 'react';
 import {Button, Form, FormGroup, Input, Label} from "reactstrap";
 
