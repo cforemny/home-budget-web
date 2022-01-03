@@ -38,14 +38,14 @@ class ExpenseList extends Component {
     }
 
      componentDidMount() {
-         fetch('/expenses?year=' + this.state.year + '&month=' + this.state.month, { mode: 'cors' })
+         fetch('/expenses?year=' + this.state.year + '&month=' + this.state.month)
             .then(response => response.json())
             .then(data => this.setState({expenses: data}));
         this.getExpenseCategories();
     }
 
     getExpenseCategories() {
-        fetch('/categories/expense', { mode: 'cors' })
+        fetch('/categories/expense')
             .then(response => {response.json()})
             .then(data => this.setState({expenseCategories: data}));
     }
