@@ -46,7 +46,7 @@ class ExpenseList extends Component {
 
     getExpenseCategories() {
         fetch('/categories/expense')
-            .then(response => {response.json()})
+            .then(response => response.json())
             .then(data => this.setState({expenseCategories: data}));
     }
 
