@@ -171,8 +171,8 @@ class ExpenseList extends Component {
         const {expenseCategories} = this.state;
         const expenseCategoryList = expenseCategories.map(category => {
             return <tbody key={category.description}>
-            <tr className="text-uppercase" key={category.id}>
-                <td>{category.description}</td>
+            <tr  className="text-uppercase" key={category.id}>
+                <td><strong>{category.description}</strong></td>
             </tr>
             {this.renderTableData(category.id)}
             <tr >
@@ -211,10 +211,10 @@ class ExpenseList extends Component {
                                 <Table hover className="mt-4">
                                     <thead>
                                     <tr>
-                                        <th width="20%">Kategoria/Opis</th>
-                                        <th width="10%">Kwota</th>
-                                        <th width="20%">Data dodania</th>
-                                        <th width="30%">Akcja</th>
+                                        <th width="15%">Kategoria/Opis</th>
+                                        <th width="5%">Kwota</th>
+                                        <th width="15%">Data dodania</th>
+                                        <th width="65%">Akcja</th>
                                     </tr>
                                     </thead>
                                     {expenseCategoryList}

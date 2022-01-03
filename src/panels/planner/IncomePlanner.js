@@ -142,7 +142,7 @@ class IncomePlanner extends Component {
         const incomesCategoryList = incomesCategories.map(category => {
             return <tbody key={category.description}>
             <tr key={category.id}>
-                <td>{category.description}</td>
+                <td><strong>{category.description}</strong></td>
             </tr>
             {this.renderTableData(category.id)}
             <tr key="incomeInputRow">

@@ -144,7 +144,7 @@ class ExpensePlanner extends Component {
         const expenseCategoryList = expenseCategories.map(category => {
             return <tbody key={category.description}>
             <tr key={category.id}>
-                <td>{category.description}</td>
+                <td><strong>{category.description}</strong></td>
             </tr>
             {this.renderTableData(category.id)}
             <tr key="expenseInputRow">
