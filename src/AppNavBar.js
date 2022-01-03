@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 
 import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink} from 'reactstrap';
-import {AiFillHome} from "react-icons/ai";
 
 export default class AppNavBar extends Component {
 
@@ -29,9 +28,7 @@ export default class AppNavBar extends Component {
         return (
             <div>
                 <Navbar color='light' light expand="md">
-                    <NavbarBrand href="/">
-                        <AiFillHome size={40}/>
-                    </NavbarBrand>
+                    <NavbarBrand href="/">Strona glowna</NavbarBrand>
                     <NavbarToggler onClick={this.toggle}/>
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
