@@ -21,7 +21,7 @@ class AdminPanel extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('http://localhost:8090/admin-panel/category/' + item.category,
+        await fetch('/admin-panel/category/' + item.category,
             {
                 method: 'POST',
                 headers: {

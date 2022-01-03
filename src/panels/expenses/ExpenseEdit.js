@@ -69,7 +69,7 @@ class ExpenseEdit extends Component {
         event.preventDefault();
         const {item} = this.state;
 
-        await fetch('http://localhost:8090/expenses' + (item.id ? '/' + item.id : ''), {
+        await fetch('/expenses' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',

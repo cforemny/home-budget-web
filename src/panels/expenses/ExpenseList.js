@@ -38,15 +38,15 @@ class ExpenseList extends Component {
     }
 
      componentDidMount() {
-         fetch('http://localhost:8090/expenses?year=' + this.state.year + '&month=' + this.state.month, { mode: 'cors' })
+         fetch('/expenses?year=' + this.state.year + '&month=' + this.state.month, { mode: 'cors' })
             .then(response => response.json())
             .then(data => this.setState({expenses: data}));
         this.getExpenseCategories();
     }
 
     getExpenseCategories() {
-        fetch('http://localhost:8090/categories/expense')
-            .then(response => response.json())
+        fetch('/categories/expense', { mode: 'cors' })
+            .then(response => {response.json()})
             .then(data => this.setState({expenseCategories: data}));
     }
 
@@ -70,13 +70,13 @@ class ExpenseList extends Component {
             let nextYear = actualYear + 1
             this.setState({year: nextYear})
             this.setState({month: 1})
-            fetch('http://localhost:8090/expenses?year=' + nextYear + '&month=' + 1)
+            fetch('/expenses?year=' + nextYear + '&month=' + 1)
                 .then(response => response.json())
                 .then(data => this.setState({expenses: data}));
         } else {
             let nextMonth = actualMonth + 1;
             this.setState({month: nextMonth})
-            fetch('http://localhost:8090/expenses?year=' + this.state.year + '&month=' + nextMonth)
+            fetch('/expenses?year=' + this.state.year + '&month=' + nextMonth)
                 .then(response => response.json())
                 .then(data => this.setState({expenses: data}));
         }
@@ -89,13 +89,13 @@ class ExpenseList extends Component {
             let previousYear = actualYear - 1
             this.setState({year: previousYear})
             this.setState({month: 12})
-            fetch('http://localhost:8090/expenses?year=' + previousYear + '&month=' + 12)
+            fetch('/expenses?year=' + previousYear + '&month=' + 12)
                 .then(response => response.json())
                 .then(data => this.setState({expenses: data}));
         } else {
             let previousMonth = actualMonth - 1;
             this.setState({month: previousMonth})
-            fetch('http://localhost:8090/expenses?year=' + this.state.year + '&month=' + previousMonth)
+            fetch('/expenses?year=' + this.state.year + '&month=' + previousMonth)
                 .then(response => response.json())
                 .then(data => this.setState({expenses: data}));
         }
@@ -104,7 +104,7 @@ class ExpenseList extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('http://localhost:8090/expenses',
+        await fetch('/expenses',
             {
                 method: 'POST',
                 headers: {
