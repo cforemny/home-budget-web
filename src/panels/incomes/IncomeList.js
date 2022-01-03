@@ -36,14 +36,14 @@ class IncomeList extends Component {
     }
 
     componentDidMount() {
-        fetch('http://46.41.137.113:8090/incomes?year=' + this.state.year + '&month=' + this.state.month)
+        fetch('http://localhost:8090/incomes?year=' + this.state.year + '&month=' + this.state.month)
             .then(response => response.json())
             .then(data => this.setState({incomes: data}));
         this.getIncomeCategories();
     }
 
     getIncomeCategories() {
-        fetch('http://46.41.137.113:8090/categories/income')
+        fetch('http://localhost:8090/categories/income')
             .then(response => response.json())
             .then(data => this.setState({incomeCategories: data}));
     }
@@ -68,13 +68,13 @@ class IncomeList extends Component {
             let nextYear = actualYear + 1
             this.setState({year: nextYear})
             this.setState({month: 1})
-            fetch('http://46.41.137.113:8090/incomes?year=' + nextYear + '&month=' + 1)
+            fetch('http://localhost:8090/incomes?year=' + nextYear + '&month=' + 1)
                 .then(response => response.json())
                 .then(data => this.setState({incomes: data}));
         } else {
             let nextMonth = actualMonth + 1;
             this.setState({month: nextMonth})
-            fetch('http://46.41.137.113:8090/incomes?year=' + this.state.year + '&month=' + nextMonth)
+            fetch('http://localhost:8090/incomes?year=' + this.state.year + '&month=' + nextMonth)
                 .then(response => response.json())
                 .then(data => this.setState({incomes: data}));
         }
@@ -87,13 +87,13 @@ class IncomeList extends Component {
             let previousYear = actualYear - 1
             this.setState({year: previousYear})
             this.setState({month: 12})
-            fetch('http://46.41.137.113:8090/incomes?year=' + previousYear + '&month=' + 12)
+            fetch('http://localhost:8090/incomes?year=' + previousYear + '&month=' + 12)
                 .then(response => response.json())
                 .then(data => this.setState({incomes: data}));
         } else {
             let previousMonth = actualMonth - 1;
             this.setState({month: previousMonth})
-            fetch('http://46.41.137.113:8090/incomes?year=' + this.state.year + '&month=' + previousMonth)
+            fetch('http://localhost:8090/incomes?year=' + this.state.year + '&month=' + previousMonth)
                 .then(response => response.json())
                 .then(data => this.setState({incomes: data}));
         }
@@ -103,7 +103,7 @@ class IncomeList extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('http://46.41.137.113:8090/incomes',
+        await fetch('http://localhost:8090/incomes',
             {
                 method: 'POST',
                 headers: {

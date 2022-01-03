@@ -17,7 +17,7 @@ class Login extends Component {
 
      verifyUser() {
         // TODO: zrobic to chytrze, a nie w parametrach
-        return fetch('http://46.41.137.113:8090/login?user=' + this.state.userName + '&password=' + this.state.password, {
+        return fetch('http://localhost:8090/login?user=' + this.state.userName + '&password=' + this.state.password, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
