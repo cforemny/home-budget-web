@@ -21,7 +21,7 @@ class AdminPanel extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('http://cypole.pl:8090/admin-panel/category/' + item.category,
+        awaitfetch('/admin-panel/category/' + item.category,
             {
                 method: 'POST',
                 headers: {

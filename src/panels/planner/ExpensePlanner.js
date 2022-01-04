@@ -45,13 +45,13 @@ class ExpensePlanner extends Component {
     }
 
     getExpenseCategories() {
-        fetch('http://cypole.pl:8090/categories/expense')
+       fetch('/categories/expense')
             .then(response => response.json())
             .then(data => this.setState({expenseCategories: data}));
     }
 
     getPlannedExpenses(year, month) {
-        fetch('http://cypole.pl:8090/planner/expenses?year=' + year + '&month=' + month)
+       fetch('/planner/expenses?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({plannedExpenses: data}));
     }
@@ -59,7 +59,7 @@ class ExpensePlanner extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('http://cypole.pl:8090/planner/expenses',
+        awaitfetch('/planner/expenses',
             {
                 method: 'POST',
                 headers: {
