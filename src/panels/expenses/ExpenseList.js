@@ -104,7 +104,7 @@ class ExpenseList extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        awaitfetch('/expenses',
+        await fetch('/expenses',
             {
                 method: 'POST',
                 headers: {

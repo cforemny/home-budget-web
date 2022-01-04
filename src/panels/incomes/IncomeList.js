@@ -103,7 +103,7 @@ class IncomeList extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        awaitfetch('/incomes',
+        await fetch('/incomes',
             {
                 method: 'POST',
                 headers: {

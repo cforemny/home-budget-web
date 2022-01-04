@@ -70,7 +70,7 @@ class IncomeEdit extends Component {
         event.preventDefault();
         const {item} = this.state;
 
-        awaitfetch('/incomes' + (item.id ? '/' + item.id : ''), {
+        await fetch('/incomes' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',

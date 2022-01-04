@@ -57,7 +57,7 @@ class IncomePlanner extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        awaitfetch('/planner/incomes',
+        await fetch('/planner/incomes',
             {
                 method: 'POST',
                 headers: {

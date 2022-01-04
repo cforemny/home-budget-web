@@ -59,7 +59,7 @@ class ExpensePlanner extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        awaitfetch('/planner/expenses',
+        await fetch('/planner/expenses',
             {
                 method: 'POST',
                 headers: {
