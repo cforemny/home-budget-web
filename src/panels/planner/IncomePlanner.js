@@ -43,13 +43,13 @@ class IncomePlanner extends Component {
     }
 
     getIncomeCategories() {
-        fetch('/categories/income')
+        fetch('http://cypole.pl:8090/categories/income')
             .then(response => response.json())
             .then(data => this.setState({incomeCategories: data}));
     }
 
     getPlannedIncomes(year, month) {
-        fetch('/planner/incomes?year=' + year + '&month=' + month)
+        fetch('http://cypole.pl:8090/planner/incomes?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({plannedIncomes: data}));
     }
@@ -57,7 +57,7 @@ class IncomePlanner extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('/planner/incomes',
+        await fetch('http://cypole.pl:8090/planner/incomes',
             {
                 method: 'POST',
                 headers: {

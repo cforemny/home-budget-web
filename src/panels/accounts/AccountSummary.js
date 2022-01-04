@@ -13,7 +13,7 @@ class AccountSummary extends Component {
 
     componentDidMount() {
         let today = new Date()
-        fetch('/account?date=' + today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate())
+        fetch('http://cypole.pl:8090/account?date=' + today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate())
             .then(response => response.json())
             .then(data => this.setState({accounts: data}));
     }
