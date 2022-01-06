@@ -1,95 +1,60 @@
 import React, {Component} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AppNavBar from "../../AppNavBar";
-import {Button, Col, Container, Nav, NavItem, NavLink, Row, TabContent, TabPane} from "reactstrap";
+import {Col, Container, Nav, NavItem, NavLink, Row, TabContent, TabPane} from "reactstrap";
 import ExpensePlanner from "./ExpensePlanner";
 import IncomePlanner from "./IncomePlanner";
 import BudgetRealization from "./BudgetRealization";
 import PanelNavBar from "../PanelNavBar";
+import MonthManager from "../MonthManager";
 
 class MonthPlanner extends Component {
 
     constructor(props) {
         super(props);
-        let today = new Date();
         this.state = {
-            currentDate: today,
-            month: today.getMonth() + 1,
-            year: today.getFullYear(),
+            currentDate: new Date(),
             activeTab: 'expenses',
             expenseSummary: 0,
             incomesSummary: 0
         }
+        this.handleDateChange = this.handleDateChange.bind(this);
+    }
+
+    handleDateChange(date) {
+        this.getExpenseSummary(date.getFullYear(), date.getMonth() + 1)
+        this.getIncomeSummary(date.getFullYear(), date.getMonth() + 1)
+        this.setState({currentDate: date})
     }
 
     componentDidMount() {
-        this.getExpenseSummary(this.state.year, this.state.month);
-        this.getIncomeSummary(this.state.year, this.state.month);
+        this.getExpenseSummary(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
+        this.getIncomeSummary(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
     }
 
     getExpenseSummary(year, month) {
-       fetch('/planner/expenses/summary?year=' + year + '&month=' + month)
+        fetch('/planner/expenses/summary?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({expenseSummary: data}));
     }
 
     getIncomeSummary(year, month) {
-       fetch('/planner/incomes/summary?year=' + year + '&month=' + month)
+        fetch('/planner/incomes/summary?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({incomesSummary: data}));
-    }
-
-    increaseDate() {
-        let actualYear = this.state.year
-        let actualMonth = this.state.month
-        if (actualMonth === 12) {
-            let nextYear = actualYear + 1
-            this.setState({year: nextYear})
-            this.setState({month: 1})
-            this.getIncomeSummary(nextYear, 1)
-            this.getExpenseSummary(nextYear, 1)
-        } else {
-            let nextMonth = actualMonth + 1;
-            this.setState({month: nextMonth})
-            this.getExpenseSummary(this.state.year, nextMonth)
-            this.getIncomeSummary(this.state.year, nextMonth)
-        }
-    }
-
-    decreaseDate() {
-        let actualYear = this.state.year
-        let actualMonth = this.state.month
-        if (actualMonth === 1) {
-            let previousYear = actualYear - 1
-            this.setState({year: previousYear})
-            this.setState({month: 12})
-            this.getExpenseSummary(previousYear, 12)
-            this.getIncomeSummary(previousYear, 12)
-        } else {
-            let previousMonth = actualMonth - 1;
-            this.setState({month: previousMonth})
-            this.getExpenseSummary(this.state.year, previousMonth)
-            this.getIncomeSummary(this.state.year, previousMonth)
-        }
     }
 
     render() {
         return (
             <div>
                 <AppNavBar/>
+                <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
                 <Container fluid>
                     <div>
-                        <div style={{padding: 10}}>
-                            <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
-                                miesiac
-                            </Button>{' '}
-                            <Button color='light' onClick={() => this.increaseDate()}>Nastepny
-                                miesiac
-                            </Button>
-                        </div>
-                        <PanelNavBar month={this.state.month} panelName={'Planer budzetu'} />
-                        <BudgetRealization expenseSummary={this.state.expenseSummary} incomesSummary={this.state.incomesSummary}/>
-                        <Nav tabs >
+                        <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Planer budzetu'}/>
+                        <BudgetRealization expenseSummary={this.state.expenseSummary}
+                                           incomesSummary={this.state.incomesSummary}/>
+                        <Nav tabs>
                             <NavItem>
                                 <NavLink onClick={() => this.setState({activeTab: 'expenses'})}> Wydatki
                                 </NavLink>
@@ -103,12 +68,14 @@ class MonthPlanner extends Component {
                             <TabPane tabId="expenses">
                                 <Row>
                                     <Col>
-                                        <ExpensePlanner year={this.state.year} month={this.state.month}/>
+                                        <ExpensePlanner year={this.state.currentDate.getFullYear()}
+                                                        month={this.state.currentDate.getMonth() + 1}/>
                                     </Col>
                                 </Row>
                             </TabPane>
                             <TabPane tabId="incomes">
-                                <IncomePlanner year={this.state.year} month={this.state.month}/>
+                                <IncomePlanner year={this.state.currentDate.getFullYear()}
+                                               month={this.state.currentDate.getMonth() + 1}/>
                             </TabPane>
                         </TabContent>
                     </div>
