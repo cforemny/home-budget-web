@@ -13,26 +13,26 @@ import AccountSummary from "./panels/accounts/AccountSummary";
 
 class App extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            isUserValid: 'false'
-        }
-    }
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {
+    //         isUserValid: 'false'
+    //     }
+    // }
 
-    componentDidMount() {
-        this.setState({isUserValid: sessionStorage.getItem('isUserValid')});
-    }
+    // componentDidMount() {
+    //     this.setState({isUserValid: sessionStorage.getItem('isUserValid')});
+    // }
 
     render() {
-        if (this.state.isUserValid !== 'true') {
-            return (
-                <Home/>
-            )
-        } else {
+        // if (this.state.isUserValid !== 'true') {
+        //     return (
+        //         <Home/>
+        //     )
+        // } else {
             return (<Router>
                     <Switch>
-                        <Route path='/' exact={true} component={ExpenseList}/>
+                        <Route path='/' exact={true} component={Home}/>
                         <Route path='/expenses' exact={true} component={ExpenseList}/>
                         <Route path='/expenses/:id' component={ExpenseEdit}/>
                         <Route path='/incomes' exact={true} component={IncomeList}/>
@@ -45,7 +45,7 @@ class App extends Component {
                 </Router>
             )
         }
-    }
+    // }
 }
 
 export default App;
