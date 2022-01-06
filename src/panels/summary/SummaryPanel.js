@@ -4,6 +4,7 @@ import ExpenseSummary from "./ExpenseSummary";
 import {Button, Col, Container, Row} from "reactstrap";
 import IncomeSummary from "./IncomeSummary";
 import MonthSummary from "./MonthSummary";
+import PanelNavBar from "../PanelNavBar";
 
 class SummaryPanel extends Component {
 
@@ -91,7 +92,6 @@ class SummaryPanel extends Component {
         return (
             <div>
                 <AppNavBar/>
-                <h3>Podsumowanie miesiaca {this.state.month}-{this.state.year}</h3>
                 <div>
                     <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
                         miesiac
@@ -101,6 +101,7 @@ class SummaryPanel extends Component {
                     </Button>
                 </div>
                 <Container fluid="sm">
+                    <PanelNavBar month={this.state.month} panelName={'Podsumowanie miesiaca: '} />
                     <Row>
                         <Col>Rozkład wydatków<ExpenseSummary expenses={this.state.expenses}/></Col>
                         <Col>Rozkład przychodów <IncomeSummary incomes={this.state.incomes}/></Col>

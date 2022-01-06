@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Container, Form, Input, Table} from 'reactstrap';
 import AppNavBar from '../AppNavBar';
+import PanelNavBar from "./PanelNavBar";
 
 class AdminPanel extends Component {
 
@@ -53,9 +54,9 @@ class AdminPanel extends Component {
         return (
             <div>
                 <AppNavBar/>
-                <h3>Panel administratora</h3>
                 <Container>
                     <Form id='categoriesForm' onSubmit={this.handleSubmit}>
+                        <PanelNavBar panelName={'Panel Administratora'} />
                         <Table>
                             <tbody>
                             <tr>

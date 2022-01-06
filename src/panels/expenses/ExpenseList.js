@@ -4,6 +4,7 @@ import AppNavBar from '../../AppNavBar';
 import {Link} from 'react-router-dom';
 import Form from "reactstrap/es/Form";
 import Select from "react-select";
+import PanelNavBar from "../PanelNavBar";
 
 
 class ExpenseList extends Component {
@@ -204,7 +205,6 @@ class ExpenseList extends Component {
             <div>
                 <AppNavBar/>
                 <Container fluid>
-                    <h3>Wydatki {this.state.month}-{this.state.year}</h3>
                     <div>
                         <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
                             miesiac
@@ -216,6 +216,7 @@ class ExpenseList extends Component {
                     <div>
                         <br/>
                         <Container>
+                            <PanelNavBar month={this.state.month} panelName={'Wydatki'} />
                             <Form id='expensesForm' onSubmit={this.handleSubmit}>
                                 <FormGroup className='card p-3 bg-light'>
                                     <h5>Nowy wydatek</h5>

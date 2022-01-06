@@ -5,6 +5,7 @@ import {Button, Col, Container, Nav, NavItem, NavLink, Row, TabContent, TabPane}
 import ExpensePlanner from "./ExpensePlanner";
 import IncomePlanner from "./IncomePlanner";
 import BudgetRealization from "./BudgetRealization";
+import PanelNavBar from "../PanelNavBar";
 
 class MonthPlanner extends Component {
 
@@ -78,7 +79,6 @@ class MonthPlanner extends Component {
                 <AppNavBar/>
                 <Container fluid>
                     <div>
-                        <h3>Planer budzetu na {this.state.month}-{this.state.year}</h3>
                         <div style={{padding: 10}}>
                             <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
                                 miesiac
@@ -87,6 +87,7 @@ class MonthPlanner extends Component {
                                 miesiac
                             </Button>
                         </div>
+                        <PanelNavBar month={this.state.month} panelName={'Planer budzetu'} />
                         <BudgetRealization expenseSummary={this.state.expenseSummary} incomesSummary={this.state.incomesSummary}/>
                         <Nav tabs >
                             <NavItem>
