@@ -21,15 +21,15 @@ class MonthPlanner extends Component {
         this.handleDateChange = this.handleDateChange.bind(this);
     }
 
+    componentDidMount() {
+        this.getExpenseSummary(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
+        this.getIncomeSummary(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
+    }
+
     handleDateChange(date) {
         this.getExpenseSummary(date.getFullYear(), date.getMonth() + 1)
         this.getIncomeSummary(date.getFullYear(), date.getMonth() + 1)
         this.setState({currentDate: date})
-    }
-
-    componentDidMount() {
-        this.getExpenseSummary(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
-        this.getIncomeSummary(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
     }
 
     getExpenseSummary(year, month) {

@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom';
 import Form from "reactstrap/es/Form";
 import Select from "react-select";
 import PanelNavBar from "../PanelNavBar";
+import MonthManager from "../MonthManager";
 
 
 class ExpenseList extends Component {
@@ -23,12 +24,10 @@ class ExpenseList extends Component {
     }
 
     constructor(props) {
-        let today = new Date();
         super(props);
         this.state = {
             expenses: [],
-            month: today.getMonth() + 1,
-            year: today.getFullYear(),
+            currentDate: new Date(),
             item: this.expense,
             expenseCategories: []
         };
@@ -40,8 +39,13 @@ class ExpenseList extends Component {
     }
 
     componentDidMount() {
-        this.getExpenses(this.state.year , this.state.month);
+        this.getExpenses(this.state.currentDate.getFullYear() , this.state.currentDate.getMonth() + 1);
         this.getExpenseCategories();
+    }
+
+    handleDateChange(date) {
+        this.getExpenses(date.getFullYear(), date.getMonth() + 1)
+        this.setState({currentDate: date})
     }
 
     getExpenseCategories() {
@@ -72,37 +76,6 @@ class ExpenseList extends Component {
         });
     }
 
-    increaseDate() {
-        let actualYear = this.state.year
-        let actualMonth = this.state.month
-        if (actualMonth === 12) {
-            let nextYear = actualYear + 1
-            this.setState({year: nextYear})
-            this.setState({month: 1})
-            this.getExpenses(nextYear, 1);
-        } else {
-            let nextMonth = actualMonth + 1;
-            this.setState({month: nextMonth})
-            this.getExpenses(this.state.year , nextMonth);
-        }
-    }
-
-    decreaseDate() {
-        let actualYear = this.state.year
-        let actualMonth = this.state.month
-        if (actualMonth === 1) {
-            let previousYear = actualYear - 1
-            this.setState({year: previousYear})
-            this.setState({month: 12})
-            this.getExpenses(previousYear, 12);
-        } else {
-            let previousMonth = actualMonth - 1;
-            this.setState({month: previousMonth})
-            this.getExpenses(this.state.year, previousMonth);
-        }
-    }
-
-
     getExpenses(year, month) {
         fetch('/expenses?year=' + year + '&month=' + month)
             .then(response => response.json())
@@ -124,7 +97,7 @@ class ExpenseList extends Component {
         this.setState({item: this.expense});
         document.getElementById('expensesForm').reset()
         await this.getExpenseCategories();
-        await this.getExpenses(this.state.year, this.state.month)
+        await this.getExpenses(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1)
     }
 
     handleExpenseDescriptionChange(event) {
@@ -204,19 +177,13 @@ class ExpenseList extends Component {
         return (
             <div>
                 <AppNavBar/>
+
                 <Container fluid>
-                    <div>
-                        <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
-                            miesiac
-                        </Button>{' '}
-                        <Button color='light' onClick={() => this.increaseDate()}>Nastepny
-                            miesiac
-                        </Button>
-                    </div>
                     <div>
                         <br/>
                         <Container>
-                            <PanelNavBar month={this.state.month} panelName={'Wydatki'} />
+                            <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
+                            <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Wydatki'} />
                             <Form id='expensesForm' onSubmit={this.handleSubmit}>
                                 <FormGroup className='card p-3 bg-light'>
                                     <h5>Nowy wydatek</h5>

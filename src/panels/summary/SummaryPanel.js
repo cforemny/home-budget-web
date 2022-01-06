@@ -1,67 +1,38 @@
 import React, {Component} from 'react';
 import AppNavBar from '../../AppNavBar';
 import ExpenseSummary from "./ExpenseSummary";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import IncomeSummary from "./IncomeSummary";
 import MonthSummary from "./MonthSummary";
 import PanelNavBar from "../PanelNavBar";
+import MonthManager from "../MonthManager";
 
 class SummaryPanel extends Component {
 
     constructor(props) {
-        let today = new Date();
         super(props);
         this.state = {
             expenses: [],
             incomes: [],
             expensesSum: 0,
             incomesSum: 0,
-            month: today.getMonth() + 1,
-            year: today.getFullYear()
+            currentDate:  new Date()
         };
     }
 
     componentDidMount() {
-        this.fetchExpenseSummary(this.state.year, this.state.month);
-        this.fetchIncomesSummary(this.state.year, this.state.month);
-        this.fetchExpenseSummaryValue(this.state.year, this.state.month);
-        this.fetchIncomesSummaryValue(this.state.year, this.state.month)
+        this.fetchExpenseSummary(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
+        this.fetchIncomesSummary(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
+        this.fetchExpenseSummaryValue(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
+        this.fetchIncomesSummaryValue(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1)
     }
 
-    increaseDate() {
-        let actualYear = this.state.year
-        let actualMonth = this.state.month
-        if (actualMonth === 12) {
-            let nextYear = actualYear + 1
-            this.setState({year: nextYear})
-            this.setState({month: 1})
-            this.fetchExpenseSummary(nextYear, 1);
-            this.fetchIncomesSummary(nextYear, 1);
-        } else {
-            let nextMonth = actualMonth + 1;
-            this.setState({month: nextMonth})
-            this.fetchExpenseSummary(this.state.year, nextMonth);
-            this.fetchIncomesSummary(this.state.year, nextMonth);
-        }
-
-    }
-
-    decreaseDate() {
-        let actualYear = this.state.year
-        let actualMonth = this.state.month
-        if (actualMonth === 1) {
-            let previousYear = actualYear - 1
-            this.setState({year: previousYear})
-            this.setState({month: 12})
-            this.fetchExpenseSummary(previousYear, 12);
-            this.fetchIncomesSummary(previousYear, 12);
-        } else {
-            let previousMonth = actualMonth - 1;
-            this.setState({month: previousMonth})
-            this.fetchExpenseSummary(this.state.year, previousMonth);
-            this.fetchIncomesSummary(this.state.year, previousMonth);
-        }
-
+    handleDateChange(date) {
+        this.setState({currentDate: date})
+        this.fetchExpenseSummary(date.getFullYear(), date.getMonth() + 1);
+        this.fetchIncomesSummary(date.getFullYear(), date.getMonth() + 1);
+        this.fetchExpenseSummaryValue(date.getFullYear(), date.getMonth() + 1);
+        this.fetchIncomesSummaryValue(date.getFullYear(), date.getMonth() + 1)
     }
 
     fetchExpenseSummary(year, month) {
@@ -92,16 +63,9 @@ class SummaryPanel extends Component {
         return (
             <div>
                 <AppNavBar/>
-                <div>
-                    <Button color='light' onClick={() => this.decreaseDate()}>Poprzedni
-                        miesiac
-                    </Button>{' '}
-                    <Button color='light' onClick={() => this.increaseDate()}>Nastepny
-                        miesiac
-                    </Button>
-                </div>
+                <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
                 <Container fluid="sm">
-                    <PanelNavBar month={this.state.month} panelName={'Podsumowanie miesiaca: '} />
+                    <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Podsumowanie miesiaca: '} />
                     <Row>
                         <Col>Rozkład wydatków<ExpenseSummary expenses={this.state.expenses}/></Col>
                         <Col>Rozkład przychodów <IncomeSummary incomes={this.state.incomes}/></Col>

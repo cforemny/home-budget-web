@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom';
 import Form from "reactstrap/es/Form";
 import Select from "react-select";
 import PanelNavBar from "../PanelNavBar";
+import MonthManager from "../MonthManager";
 
 class IncomeList extends Component {
 
@@ -22,12 +23,10 @@ class IncomeList extends Component {
     }
 
     constructor(props) {
-        let today = new Date();
         super(props);
         this.state = {
             incomes: [],
-            month: today.getMonth() + 1,
-            year: today.getFullYear(),
+            currentDate: new Date(),
             item: this.income,
             incomeCategories: []
         };
@@ -36,11 +35,17 @@ class IncomeList extends Component {
         this.handleIncomeValueChange = this.handleIncomeValueChange.bind(this);
         this.handleCategoryChange = this.handleCategoryChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleDateChange = this.handleDateChange.bind(this);
     }
 
     componentDidMount() {
-        this.getIncomes(this.state.year, this.state.month);
+        this.getIncomes(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
         this.getIncomeCategories();
+    }
+
+    handleDateChange(date) {
+        this.getIncomes(date.getFullYear(), date.getMonth() + 1)
+        this.setState({currentDate: date})
     }
 
     getIncomes(year, month) {
@@ -77,36 +82,6 @@ class IncomeList extends Component {
         });
     }
 
-    increaseDate() {
-        let actualYear = this.state.year
-        let actualMonth = this.state.month
-        if (actualMonth === 12) {
-            let nextYear = actualYear + 1
-            this.setState({year: nextYear})
-            this.setState({month: 1})
-            this.getIncomes(nextYear, 1)
-        } else {
-            let nextMonth = actualMonth + 1;
-            this.setState({month: nextMonth})
-            this.getIncomes(this.state.year, nextMonth)
-        }
-    }
-
-    decreaseDate() {
-        let actualYear = this.state.year
-        let actualMonth = this.state.month
-        if (actualMonth === 1) {
-            let previousYear = actualYear - 1
-            this.setState({year: previousYear})
-            this.setState({month: 12})
-            this.getIncomes(previousYear, 12)
-        } else {
-            let previousMonth = actualMonth - 1;
-            this.setState({month: previousMonth})
-            this.getIncomes(this.state.year, previousMonth)
-        }
-    }
-
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
@@ -122,7 +97,7 @@ class IncomeList extends Component {
         this.setState({item: this.income});
         document.getElementById('incomesForm').reset()
         await this.getIncomeCategories();
-        await this.getIncomes(this.state.year, this.state.month)
+        await this.getIncomes(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1)
     }
 
     handleIncomeDescriptionChange(event) {
@@ -202,19 +177,12 @@ class IncomeList extends Component {
         return (
             <div>
                 <AppNavBar/>
+                <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
                 <Container fluid>
-                    <div>
-                        <Button color='light' onClick={() => this.decreaseDate()}>
-                            Poprzedni miesiac
-                        </Button>{' '}
-                        <Button color='light' onClick={() => this.increaseDate()}>
-                            Nastepny miesiac
-                        </Button>
-                    </div>
                     <div>
                         <br/>
                         <Container>
-                            <PanelNavBar month={this.state.month} panelName={'Przychody'} />
+                            <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Przychody'} />
                             <Form id='incomesForm' onSubmit={this.handleSubmit}>
                                 <FormGroup className='card p-3 bg-light'>
                                     <h5>Nowy przychod</h5>
