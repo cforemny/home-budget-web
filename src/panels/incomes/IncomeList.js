@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {Button, Container, Input, Table} from 'reactstrap';
+import {Button, Container, FormGroup, Input, Table} from 'reactstrap';
 import AppNavBar from '../../AppNavBar';
 import {Link} from 'react-router-dom';
 import Form from "reactstrap/es/Form";
+import Select from "react-select";
 
 class IncomeList extends Component {
 
@@ -32,20 +33,34 @@ class IncomeList extends Component {
         this.remove = this.remove.bind(this);
         this.handleIncomeDescriptionChange = this.handleIncomeDescriptionChange.bind(this);
         this.handleIncomeValueChange = this.handleIncomeValueChange.bind(this);
+        this.handleCategoryChange = this.handleCategoryChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
-       fetch('/incomes?year=' + this.state.year + '&month=' + this.state.month)
-            .then(response => response.json())
-            .then(data => this.setState({incomes: data}));
+        this.getIncomes(this.state.year, this.state.month);
         this.getIncomeCategories();
     }
 
+    getIncomes(year, month) {
+        fetch('/incomes?year=' + year + '&month=' + month)
+            .then(response => response.json())
+            .then(data => this.setState({incomes: data}));
+    }
+
     getIncomeCategories() {
-       fetch('/categories/income')
+        fetch('/categories/income')
             .then(response => response.json())
             .then(data => this.setState({incomeCategories: data}));
+    }
+
+    getSelectedOptions() {
+        const data = this.state.incomeCategories
+
+        return data.map(d => ({
+            "value": d.id,
+            "label": d.description,
+        }))
     }
 
     async remove(id) {
@@ -68,15 +83,11 @@ class IncomeList extends Component {
             let nextYear = actualYear + 1
             this.setState({year: nextYear})
             this.setState({month: 1})
-           fetch('/incomes?year=' + nextYear + '&month=' + 1)
-                .then(response => response.json())
-                .then(data => this.setState({incomes: data}));
+            this.getIncomes(nextYear, 1)
         } else {
             let nextMonth = actualMonth + 1;
             this.setState({month: nextMonth})
-           fetch('/incomes?year=' + this.state.year + '&month=' + nextMonth)
-                .then(response => response.json())
-                .then(data => this.setState({incomes: data}));
+            this.getIncomes(this.state.year, nextMonth)
         }
     }
 
@@ -87,18 +98,13 @@ class IncomeList extends Component {
             let previousYear = actualYear - 1
             this.setState({year: previousYear})
             this.setState({month: 12})
-           fetch('/incomes?year=' + previousYear + '&month=' + 12)
-                .then(response => response.json())
-                .then(data => this.setState({incomes: data}));
+            this.getIncomes(previousYear, 12)
         } else {
             let previousMonth = actualMonth - 1;
             this.setState({month: previousMonth})
-           fetch('/incomes?year=' + this.state.year + '&month=' + previousMonth)
-                .then(response => response.json())
-                .then(data => this.setState({incomes: data}));
+            this.getIncomes(this.state.year, previousMonth)
         }
     }
-
 
     async handleSubmit(event) {
         event.preventDefault();
@@ -112,9 +118,10 @@ class IncomeList extends Component {
                 },
                 body: JSON.stringify(item),
             });
-        this.setState({item: this.plannedExpense});
+        this.setState({item: this.income});
         document.getElementById('incomesForm').reset()
-        window.location.reload(false);
+        await this.getIncomeCategories();
+        await this.getIncomes(this.state.year, this.state.month)
     }
 
     handleIncomeDescriptionChange(event) {
@@ -125,7 +132,7 @@ class IncomeList extends Component {
             additionalInformation: target.value,
             insertDate: this.state.currentDate,
             category: {
-                id: target.id
+                id: target.value
             }
         }
         this.setState({item});
@@ -140,6 +147,19 @@ class IncomeList extends Component {
             insertDate: this.state.currentDate,
             category: {
                 id: target.id
+            }
+        }
+        this.setState({item});
+    }
+
+    handleCategoryChange(event) {
+        let item;
+        item = {
+            value: this.state.item.value,
+            additionalInformation: this.state.item.additionalInformation,
+            insertDate: this.state.currentDate,
+            category: {
+                id: event.value,
             }
         }
         this.setState({item});
@@ -167,6 +187,7 @@ class IncomeList extends Component {
     }
 
     render() {
+        const {item} = this.state;
         const {incomeCategories} = this.state;
         const incomeCategoryList = incomeCategories.map(category => {
             return <tbody key={category.description}>
@@ -174,20 +195,6 @@ class IncomeList extends Component {
                 <td><strong>{category.description}</strong></td>
             </tr>
             {this.renderTableData(category.id)}
-            <tr>
-                <td>
-                    <Input id={category.id} placeholder='Opis'
-                           onChange={this.handleIncomeDescriptionChange}/>
-                </td>
-                <td>
-                    <Input id={category.id} placeholder='Kwota'
-                           onChange={this.handleIncomeValueChange}/>
-                </td>
-                <td></td>
-                <td>
-                    <Button size="sm">Dodaj</Button>
-                </td>
-            </tr>
             </tbody>
         });
 
@@ -205,19 +212,34 @@ class IncomeList extends Component {
                         </Button>
                     </div>
                     <div>
+                        <br/>
                         <Container>
                             <Form id='incomesForm' onSubmit={this.handleSubmit}>
-                                <Table className="mt-4" responsive hover>
-                                    <thead>
-                                    <tr>
-                                        <th width="15%">Kategoria/Opis</th>
-                                        <th width="5%">Kwota</th>
-                                        <th width="15%">Data dodania</th>
-                                        <th width="65%">Akcja</th>
-                                    </tr>
-                                    </thead>
-                                    {incomeCategoryList}
-                                </Table>
+                                <FormGroup className='card p-3 bg-light'>
+                                    <h5>Nowy przychod</h5>
+                                    <Input placeholder='Opis'
+                                           onChange={this.handleIncomeDescriptionChange}/>
+                                    <Input placeholder='Kwota'
+                                           onChange={this.handleIncomeValueChange}/>
+                                    <Select options={this.getSelectedOptions()}
+                                            placeholder={item.category.description || 'Wybierz kategorie'}
+                                            onChange={this.handleCategoryChange}/>
+                                    <Button size="sm">Dodaj</Button>
+                                </FormGroup>
+                                <br/>
+                                <div className='card p-3 bg-light'>
+                                    <Table responsive hover>
+                                        <thead>
+                                        <tr>
+                                            <th>Kategoria/Opis</th>
+                                            <th>Kwota</th>
+                                            <th>Data dodania</th>
+                                            <th>Akcja</th>
+                                        </tr>
+                                        </thead>
+                                        {incomeCategoryList}
+                                    </Table>
+                                </div>
                             </Form>
                         </Container>
                     </div>

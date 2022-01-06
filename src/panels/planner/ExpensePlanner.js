@@ -188,7 +188,7 @@ class ExpensePlanner extends Component {
                 <Container>
                     <Form id='expensesForm'  onSubmit={this.handleSubmit}>
                         <FormGroup className = 'card p-3 bg-light' >
-                            <h5>Dodaj wydatek</h5>
+                            <h5>Nowy wydatek</h5>
                             <Input placeholder='Opis'
                                    onChange={this.handleExpenseDescriptionChange}/>
                             <Input placeholder='Kwota'
@@ -200,7 +200,7 @@ class ExpensePlanner extends Component {
                         </FormGroup>
                         <br/>
                         <div className = 'card p-3 bg-light'>
-                        <Table hover>
+                        <Table responsive hover>
                             <thead>
                             <tr>
                                 <th> Opis/Kategoria</th>

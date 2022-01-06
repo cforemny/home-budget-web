@@ -188,7 +188,7 @@ class IncomePlanner extends Component {
                 <Container>
                     <Form id='incomesForm' onSubmit={this.handleSubmit}>
                         <FormGroup className='card p-3 bg-light'>
-                            <h5>Dodaj przychod</h5>
+                            <h5>Nowy przychod</h5>
                             <Input placeholder='Opis'
                                    onChange={this.handleIncomeDescriptionChange}/>
                             <Input placeholder='Kwota'
