@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
 import Home from './Home';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import ExpenseList from './panels/expenses/ExpenseList';
 import ExpenseEdit from "./panels/expenses/ExpenseEdit";
 import IncomeList from "./panels/incomes/IncomeList";
@@ -10,6 +9,7 @@ import AdminPanel from "./panels/AdminPanel";
 import SummaryPanel from "./panels/summary/SummaryPanel";
 import MonthPlanner from "./panels/planner/MonthPlanner";
 import AccountSummary from "./panels/accounts/AccountSummary";
+import {Route, Router, Switch} from "react-router-dom";
 
 class App extends Component {
 
@@ -32,7 +32,7 @@ class App extends Component {
         } else {
             return (<Router>
                     <Switch>
-                        <Route path='/' exact={true} component={AdminPanel}/>
+                        <Route path='/' exact={true} component={ExpenseList}/>
                         <Route path='/expenses' exact={true} component={ExpenseList}/>
                         <Route path='/expenses/:id' component={ExpenseEdit}/>
                         <Route path='/incomes' exact={true} component={IncomeList}/>

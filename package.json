@@ -9,8 +9,6 @@
     "bootstrap": "5.1",
     "chart.js": "^3.6.2",
     "create-react-nav": "^2.6.5",
-    "mdb-react-ui-kit": "^2.0.0",
-    "mdbreact": "^5.2.0",
     "react": "^17.0.2",
     "react-bootstrap-icons": "^1.6.1",
     "react-chartjs-2": "^4.0.0",

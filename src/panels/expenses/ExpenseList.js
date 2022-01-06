@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import {Button, Container, FormGroup, Input, Table} from 'reactstrap';
+import {Button, Container, Form, FormGroup, Input, Table} from 'reactstrap';
 import AppNavBar from '../../AppNavBar';
 import {Link} from 'react-router-dom';
-import Form from "reactstrap/es/Form";
 import Select from "react-select";
 
 

@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import {Container, FormGroup, Input, Table} from 'reactstrap';
-import Button from "reactstrap/es/Button";
-import Form from "reactstrap/es/Form";
+import {Button, Container, Form, FormGroup, Input, Table} from 'reactstrap';
 import Select from "react-select";
 import axios from "axios";
 
