@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import {Container, Input, Table} from 'reactstrap';
+import {Container, FormGroup, Input, Table} from 'reactstrap';
 import Button from "reactstrap/es/Button";
 import Form from "reactstrap/es/Form";
+import Select from "react-select";
+import axios from "axios";
 
 class IncomePlanner extends Component {
 
@@ -27,6 +29,7 @@ class IncomePlanner extends Component {
         }
         this.handleIncomeDescriptionChange = this.handleIncomeDescriptionChange.bind(this);
         this.handleIncomeValueChange = this.handleIncomeValueChange.bind(this);
+        this.handleCategoryChange = this.handleCategoryChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -36,20 +39,34 @@ class IncomePlanner extends Component {
     }
 
     componentDidUpdate(prevState) {
-        if(prevState.month !== this.props.month){
+        if (prevState.month !== this.props.month) {
             this.getPlannedIncomes(this.props.year, this.props.month)
             this.getIncomeCategories();
         }
     }
 
-    getIncomeCategories() {
-       fetch('/categories/income')
-            .then(response => response.json())
-            .then(data => this.setState({incomeCategories: data}));
+    async getIncomeCategories() {
+        const res = await axios.get('/categories/income')
+        const data = res.data
+
+        const options = data.map(d => ({
+            "id": d.id,
+            "description": d.description,
+        }))
+        this.setState({incomeCategories: options})
+    }
+
+    getSelectedOptions() {
+        const data = this.state.incomeCategories
+
+        return data.map(d => ({
+            "value": d.id,
+            "label": d.description,
+        }))
     }
 
     getPlannedIncomes(year, month) {
-       fetch('/planner/incomes?year=' + year + '&month=' + month)
+        fetch('/planner/incomes?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({plannedIncomes: data}));
     }
@@ -68,8 +85,8 @@ class IncomePlanner extends Component {
             });
         this.setState({item: this.plannedIncome})
         document.getElementById('incomesForm').reset()
-        this.getPlannedIncomes(this.props.year, this.props.month)
-        this.getIncomeCategories();
+        await this.getPlannedIncomes(this.props.year, this.props.month)
+        await this.getIncomeCategories();
     }
 
     async remove(id) {
@@ -95,7 +112,7 @@ class IncomePlanner extends Component {
             description: target.value,
             insertDate: date,
             category: {
-                id: target.id
+                id: this.state.item.category.id
             }
         }
         this.setState({item});
@@ -112,7 +129,23 @@ class IncomePlanner extends Component {
             description: this.state.item.description,
             insertDate: date,
             category: {
-                id: target.id
+                id: this.state.item.category.id
+            }
+        }
+        this.setState({item});
+    }
+
+    handleCategoryChange(event) {
+        let item;
+        let date = new Date();
+        date.setMonth(this.props.month - 1)
+        date.setFullYear(this.props.year)
+        item = {
+            value: this.state.item.value,
+            description: this.state.item.description,
+            insertDate: date,
+            category: {
+                id: event.value
             }
         }
         this.setState({item});
@@ -138,43 +171,46 @@ class IncomePlanner extends Component {
     }
 
     render() {
-        const incomesCategories = this.state.incomeCategories;
-        const incomesCategoryList = incomesCategories.map(category => {
+        const {item} = this.state;
+        const {incomeCategories} = this.state;
+        const incomesCategoryList = incomeCategories.map(category => {
             return <tbody key={category.description}>
             <tr key={category.id}>
                 <td><strong>{category.description}</strong></td>
             </tr>
             {this.renderTableData(category.id)}
-            <tr key="incomeInputRow">
-                <td>
-                    <Input id={category.id} placeholder='Opis'
-                           onChange={this.handleIncomeDescriptionChange}/>
-                </td>
-                <td>
-                    <Input id={category.id} placeholder='Kwota'
-                           onChange={this.handleIncomeValueChange}/>
-                </td>
-                <td>
-                    <Button size="sm">Dodaj</Button>
-                </td>
-            </tr>
             </tbody>
         });
 
         return (
             <div>
+                <br/>
                 <Container>
                     <Form id='incomesForm' onSubmit={this.handleSubmit}>
-                        <Table hover className="mt-4">
-                            <thead>
-                            <tr>
-                                <th> Opis/Kategoria</th>
-                                <th> Planowana wysokość przychodu</th>
-                                <th>Akcja</th>
-                            </tr>
-                            </thead>
-                            {incomesCategoryList}
-                        </Table>
+                        <FormGroup className='card p-3 bg-light'>
+                            <h5>Dodaj przychod</h5>
+                            <Input placeholder='Opis'
+                                   onChange={this.handleIncomeDescriptionChange}/>
+                            <Input placeholder='Kwota'
+                                   onChange={this.handleIncomeValueChange}/>
+                            <Select options={this.getSelectedOptions()}
+                                    placeholder={item.category.description || 'Wybierz kategorie'}
+                                    onChange={this.handleCategoryChange}/>
+                            <Button size="sm">Dodaj</Button>
+                        </FormGroup>
+                        <br/>
+                        <div className='card p-3 bg-light'>
+                            <Table hover className="mt-4">
+                                <thead>
+                                <tr>
+                                    <th> Opis/Kategoria</th>
+                                    <th> Planowana wysokość przychodu</th>
+                                    <th>Akcja</th>
+                                </tr>
+                                </thead>
+                                {incomesCategoryList}
+                            </Table>
+                        </div>
                     </Form>
                 </Container>
             </div>

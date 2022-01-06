@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import {Container, Input, Table} from 'reactstrap';
+import {Container, FormGroup, Input, Table} from 'reactstrap';
 import Button from "reactstrap/es/Button";
 import Form from "reactstrap/es/Form";
+import Select from "react-select";
+import axios from "axios";
 
 class ExpensePlanner extends Component {
 
@@ -20,16 +22,14 @@ class ExpensePlanner extends Component {
 
     constructor(props) {
         super(props);
-        let today = new Date();
-        today.setFullYear(this.props.year, this.props.month )
         this.state = {
-            currentDate: today,
             item: this.plannedExpense,
-            plannedExpenses : [],
+            plannedExpenses: [],
             expenseCategories: []
         }
         this.handleExpenseDescriptionChange = this.handleExpenseDescriptionChange.bind(this);
         this.handleExpenseValueChange = this.handleExpenseValueChange.bind(this);
+        this.handleCategoryChange = this.handleCategoryChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -39,19 +39,34 @@ class ExpensePlanner extends Component {
     }
 
     componentDidUpdate(prevState) {
-        if(prevState.month !== this.props.month){
+        if (prevState.month !== this.props.month) {
             this.getPlannedExpenses(this.props.year, this.props.month)
+            this.getExpenseCategories();
         }
     }
 
-    getExpenseCategories() {
-       fetch('/categories/expense')
-            .then(response => response.json())
-            .then(data => this.setState({expenseCategories: data}));
+    async getExpenseCategories() {
+        const res = await axios.get('/categories/expense')
+        const data = res.data
+
+        const options = data.map(d => ({
+            "id": d.id,
+            "description": d.description,
+        }))
+        this.setState({expenseCategories: options})
+    }
+
+    getSelectedOptions() {
+        const data = this.state.expenseCategories
+
+        return data.map(d => ({
+            "value": d.id,
+            "label": d.description,
+        }))
     }
 
     getPlannedExpenses(year, month) {
-       fetch('/planner/expenses?year=' + year + '&month=' + month)
+        fetch('/planner/expenses?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({plannedExpenses: data}));
     }
@@ -70,8 +85,8 @@ class ExpensePlanner extends Component {
             });
         this.setState({item: this.plannedExpense});
         document.getElementById('expensesForm').reset()
-        this.getPlannedExpenses(this.props.year, this.props.month)
-        this.getExpenseCategories();
+        await this.getPlannedExpenses(this.props.year, this.props.month)
+        await this.getExpenseCategories();
     }
 
     async remove(id) {
@@ -97,7 +112,7 @@ class ExpensePlanner extends Component {
             description: target.value,
             insertDate: date,
             category: {
-                id: target.id
+                id: this.state.item.category.id
             }
         }
         this.setState({item});
@@ -114,7 +129,23 @@ class ExpensePlanner extends Component {
             description: this.state.item.description,
             insertDate: date,
             category: {
-                id: target.id
+                id: this.state.item.category.id
+            }
+        }
+        this.setState({item});
+    }
+
+    handleCategoryChange(event) {
+        let item;
+        let date = new Date();
+        date.setMonth(this.props.month - 1)
+        date.setFullYear(this.props.year)
+        item = {
+            value: this.state.item.value,
+            description: this.state.item.description,
+            insertDate: date,
+            category: {
+                id: event.value
             }
         }
         this.setState({item});
@@ -140,6 +171,7 @@ class ExpensePlanner extends Component {
     }
 
     render() {
+        const {item} = this.state;
         const {expenseCategories} = this.state;
         const expenseCategoryList = expenseCategories.map(category => {
             return <tbody key={category.description}>
@@ -147,26 +179,27 @@ class ExpensePlanner extends Component {
                 <td><strong>{category.description}</strong></td>
             </tr>
             {this.renderTableData(category.id)}
-            <tr key="expenseInputRow">
-                <td>
-                    <Input id={category.id} placeholder='Opis'
-                           onChange={this.handleExpenseDescriptionChange}/>
-                </td>
-                <td>
-                    <Input id={category.id} placeholder='Kwota'
-                           onChange={this.handleExpenseValueChange}/>
-                </td>
-                <td>
-                    <Button size="sm">Dodaj</Button>
-                </td>
-            </tr>
             </tbody>
         });
 
         return (
             <div>
+                <br/>
                 <Container>
-                    <Form id='expensesForm' onSubmit={this.handleSubmit}>
+                    <Form id='expensesForm'  onSubmit={this.handleSubmit}>
+                        <FormGroup className = 'card p-3 bg-light' >
+                            <h5>Dodaj wydatek</h5>
+                            <Input placeholder='Opis'
+                                   onChange={this.handleExpenseDescriptionChange}/>
+                            <Input placeholder='Kwota'
+                                   onChange={this.handleExpenseValueChange}/>
+                            <Select options={this.getSelectedOptions()}
+                                    placeholder={item.category.description || 'Wybierz kategorie'}
+                                    onChange={this.handleCategoryChange}/>
+                            <Button size="sm">Dodaj</Button>
+                        </FormGroup>
+                        <br/>
+                        <div className = 'card p-3 bg-light'>
                         <Table hover>
                             <thead>
                             <tr>
@@ -177,6 +210,7 @@ class ExpensePlanner extends Component {
                             </thead>
                             {expenseCategoryList}
                         </Table>
+                        </div>
                     </Form>
                 </Container>
             </div>

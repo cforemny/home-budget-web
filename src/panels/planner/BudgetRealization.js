@@ -21,7 +21,7 @@ class BudgetRealization extends Component {
 
     render() {
         return (
-            <Container fluid>
+            <Container fluid className = 'card p-3 bg-light'>
                 <div>
                     <Table responsive hover>
                         <thead>

@@ -88,12 +88,12 @@ class MonthPlanner extends Component {
                             </Button>
                         </div>
                         <BudgetRealization expenseSummary={this.state.expenseSummary} incomesSummary={this.state.incomesSummary}/>
-                        <Nav tabs>
+                        <Nav tabs >
                             <NavItem>
                                 <NavLink onClick={() => this.setState({activeTab: 'expenses'})}> Wydatki
                                 </NavLink>
                             </NavItem>
-                            <NavItem color='light'>
+                            <NavItem>
                                 <NavLink onClick={() => this.setState({activeTab: 'incomes'})}> Przychody
                                 </NavLink>
                             </NavItem>

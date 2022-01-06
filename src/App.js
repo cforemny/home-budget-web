@@ -25,7 +25,6 @@ class App extends Component {
     }
 
     render() {
-        console.log(this.state.isUserValid)
         if (this.state.isUserValid !== 'true') {
             return (
                 <Home/>

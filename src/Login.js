@@ -33,7 +33,6 @@ class Login extends Component {
     async handleSubmit(e) {
         e.preventDefault();
         let val = await this.verifyUser();
-        console.log('w Login' + val)
         if (val) {
             sessionStorage.setItem('isUserValid', 'true');
             window.location.reload(false);

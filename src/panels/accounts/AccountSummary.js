@@ -19,9 +19,7 @@ class AccountSummary extends Component {
     }
 
     renderTableData(monthIndex) {
-        console.log('index' + monthIndex)
         return this.state.accounts.map(account => {
-            console.log(account.insertDate.substring(5, 7))
             if (account.insertDate.substring(5, 7) === monthIndex) {
                 return (
                     <tr key={account.id}>
