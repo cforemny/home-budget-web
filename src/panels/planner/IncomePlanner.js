@@ -66,7 +66,7 @@ class IncomePlanner extends Component {
     }
 
     getPlannedIncomes(year, month) {
-        fetch('http://46.41.137.113/8090/planner/incomes?year=' + year + '&month=' + month)
+        fetch('/planner/incomes?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({plannedIncomes: data}));
     }
@@ -74,7 +74,7 @@ class IncomePlanner extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('http://46.41.137.113/8090/planner/incomes',
+        await fetch('/planner/incomes',
             {
                 method: 'POST',
                 headers: {

@@ -36,25 +36,25 @@ class SummaryPanel extends Component {
     }
 
     fetchExpenseSummary(year, month) {
-       fetch('http://46.41.137.113/8090/expenses/summary/category?year=' + year + '&month=' + month)
+       fetch('/expenses/summary/category?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({expenses: data}));
     }
 
     fetchIncomesSummary(year, month) {
-       fetch('http://46.41.137.113/8090/incomes/summary/category?year=' + year + '&month=' + month)
+       fetch('/incomes/summary/category?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({incomes: data}));
     }
 
     fetchExpenseSummaryValue(year, month) {
-       fetch('http://46.41.137.113/8090/expenses/summary?year=' + year + '&month=' + month)
+       fetch('/expenses/summary?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({expensesSum: data.value}));
     }
 
     fetchIncomesSummaryValue(year, month) {
-       fetch('http://46.41.137.113/8090/incomes/summary?year=' + year + '&month=' + month)
+       fetch('/incomes/summary?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({incomesSum: data.value}));
     }

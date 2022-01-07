@@ -66,7 +66,7 @@ class ExpensePlanner extends Component {
     }
 
     getPlannedExpenses(year, month) {
-        fetch('http://46.41.137.113/8090/planner/expenses?year=' + year + '&month=' + month)
+        fetch('/planner/expenses?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({plannedExpenses: data}));
     }
@@ -74,7 +74,7 @@ class ExpensePlanner extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('http://46.41.137.113/8090/planner/expenses',
+        await fetch('/planner/expenses',
             {
                 method: 'POST',
                 headers: {
