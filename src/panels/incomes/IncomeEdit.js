@@ -30,16 +30,16 @@ class IncomeEdit extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    async componentDidMount() {
+     componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const income = await (await fetch(`/incomes/${this.props.match.params.id}`)).json();
+            const income =  ( fetch(`/incomes/${this.props.match.params.id}`)).json();
             this.setState({item: income});
         }
         this.getOptions();
     }
 
-    async getOptions() {
-        const res = await axios.get('/categories/income')
+     getOptions() {
+        const res =  axios.get('/categories/income')
         const data = res.data
 
         const options = data.map(d => ({
@@ -66,11 +66,11 @@ class IncomeEdit extends Component {
         }
     }
 
-    async handleSubmit(event) {
+     handleSubmit(event) {
         event.preventDefault();
         const {item} = this.state;
 
-        await fetch('/incomes' + (item.id ? '/' + item.id : ''), {
+         fetch('/incomes' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',

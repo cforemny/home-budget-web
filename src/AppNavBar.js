@@ -44,9 +44,9 @@ export default class AppNavBar extends Component {
                             <NavItem>
                                 <NavLink href="/summary">Podsumowanie</NavLink>
                             </NavItem>
-                            <NavItem>
-                                <NavLink href="/accounts">Stan kont</NavLink>
-                            </NavItem>
+                            {/*<NavItem>*/}
+                            {/*    <NavLink href="/accounts">Stan kont</NavLink>*/}
+                            {/*</NavItem>*/}
                             <NavItem>
                                 <NavLink href="/admin-panel">Panel administratora</NavLink>
                             </NavItem>

@@ -3,7 +3,6 @@ import {Container, FormGroup, Input, Table} from 'reactstrap';
 import Button from "reactstrap/es/Button";
 import Form from "reactstrap/es/Form";
 import Select from "react-select";
-import axios from "axios";
 
 class ExpensePlanner extends Component {
 
@@ -45,15 +44,16 @@ class ExpensePlanner extends Component {
         }
     }
 
-    async getExpenseCategories() {
-        const res = await axios.get('/categories/expense')
-        const data = res.data
-
-        const options = data.map(d => ({
-            "id": d.id,
-            "description": d.description,
-        }))
-        this.setState({expenseCategories: options})
+     getExpenseCategories() {
+         fetch('/categories/expense')
+             .then(response => response.json())
+             .then(data => {
+                 const options = data.map(d => ({
+                 "id": d.id,
+                 "description": d.description,
+             }))
+                 this.setState({expenseCategories: options})
+             });
     }
 
     getSelectedOptions() {
@@ -71,10 +71,10 @@ class ExpensePlanner extends Component {
             .then(data => this.setState({plannedExpenses: data}));
     }
 
-    async handleSubmit(event) {
+     handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('/planner/expenses',
+         fetch('/planner/expenses',
             {
                 method: 'POST',
                 headers: {
@@ -85,12 +85,12 @@ class ExpensePlanner extends Component {
             });
         this.setState({item: this.plannedExpense});
         document.getElementById('expensesForm').reset()
-        await this.getPlannedExpenses(this.props.year, this.props.month)
-        await this.getExpenseCategories();
+         this.getPlannedExpenses(this.props.year, this.props.month)
+         this.getExpenseCategories();
     }
 
-    async remove(id) {
-        await fetch(`/planner/expenses/` + id, {
+     remove(id) {
+         fetch(`/planner/expenses/` + id, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',

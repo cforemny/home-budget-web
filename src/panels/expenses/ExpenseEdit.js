@@ -29,16 +29,16 @@ class ExpenseEdit extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    async componentDidMount() {
+     componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const expense = await (await fetch(`/expenses/${this.props.match.params.id}`)).json();
+            const expense =  ( fetch(`/expenses/${this.props.match.params.id}`)).json();
             this.setState({item: expense});
         }
-        await this.getOptions();
+         this.getOptions();
     }
 
-    async getOptions() {
-        const res = await axios.get('/categories/expense')
+     getOptions() {
+        const res =  axios.get('/categories/expense')
         const data = res.data
 
         const options = data.map(d => ({
@@ -65,11 +65,11 @@ class ExpenseEdit extends Component {
         }
     }
 
-    async handleSubmit(event) {
+     handleSubmit(event) {
         event.preventDefault();
         const {item} = this.state;
 
-        await fetch('/expenses' + (item.id ? '/' + item.id : ''), {
+         fetch('/expenses' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',

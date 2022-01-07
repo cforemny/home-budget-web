@@ -69,8 +69,8 @@ class IncomeList extends Component {
         }))
     }
 
-    async remove(id) {
-        await fetch(`/incomes/${id}`, {
+    remove(id) {
+        fetch(`/incomes/${id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -85,19 +85,23 @@ class IncomeList extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('/incomes',
-            {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(item),
-            });
-        this.setState({item: this.income});
-        document.getElementById('incomesForm').reset()
-        await this.getIncomeCategories();
-        await this.getIncomes(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1)
+        try {
+            await fetch('/incomes',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(item),
+                });
+            this.setState({item: this.income});
+            document.getElementById('incomesForm').reset()
+            this.getIncomeCategories();
+            this.getIncomes(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1)
+        } catch (error) {
+            console.log('Problem with submitting income')
+        }
     }
 
     handleIncomeDescriptionChange(event) {
@@ -181,8 +185,9 @@ class IncomeList extends Component {
                     <div>
                         <br/>
                         <Container>
-                            <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
-                            <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Przychody'} />
+                            <MonthManager currentDate={this.state.currentDate}
+                                          handleDateChange={this.handleDateChange.bind(this)}/>
+                            <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Przychody'}/>
                             <Form id='incomesForm' onSubmit={this.handleSubmit}>
                                 <FormGroup className='card p-3 bg-light'>
                                     <h5>Nowy przychod</h5>

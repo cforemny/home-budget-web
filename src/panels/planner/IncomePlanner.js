@@ -3,7 +3,6 @@ import {Container, FormGroup, Input, Table} from 'reactstrap';
 import Button from "reactstrap/es/Button";
 import Form from "reactstrap/es/Form";
 import Select from "react-select";
-import axios from "axios";
 
 class IncomePlanner extends Component {
 
@@ -45,15 +44,16 @@ class IncomePlanner extends Component {
         }
     }
 
-    async getIncomeCategories() {
-        const res = await axios.get('/categories/income')
-        const data = res.data
-
-        const options = data.map(d => ({
-            "id": d.id,
-            "description": d.description,
-        }))
-        this.setState({incomeCategories: options})
+    getIncomeCategories() {
+        fetch('/categories/income')
+            .then(response => response.json())
+            .then(data => {
+                const options = data.map(d => ({
+                    "id": d.id,
+                    "description": d.description,
+                }))
+                this.setState({incomeCategories: options})
+            });
     }
 
     getSelectedOptions() {
@@ -71,10 +71,10 @@ class IncomePlanner extends Component {
             .then(data => this.setState({plannedIncomes: data}));
     }
 
-    async handleSubmit(event) {
+    handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('/planner/incomes',
+        fetch('/planner/incomes',
             {
                 method: 'POST',
                 headers: {
@@ -85,12 +85,12 @@ class IncomePlanner extends Component {
             });
         this.setState({item: this.plannedIncome})
         document.getElementById('incomesForm').reset()
-        await this.getPlannedIncomes(this.props.year, this.props.month)
-        await this.getIncomeCategories();
+        this.getPlannedIncomes(this.props.year, this.props.month)
+        this.getIncomeCategories();
     }
 
-    async remove(id) {
-        await fetch(`/planner/incomes/` + id, {
+    remove(id) {
+        fetch(`/planner/incomes/` + id, {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',

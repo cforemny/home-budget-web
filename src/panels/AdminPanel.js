@@ -19,10 +19,10 @@ class AdminPanel extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    async handleSubmit(event) {
+     handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('/admin-panel/category/' + item.category,
+         fetch('/admin-panel/category/' + item.category,
             {
                 method: 'POST',
                 headers: {

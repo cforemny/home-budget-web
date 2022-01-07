@@ -39,7 +39,7 @@ class ExpenseList extends Component {
     }
 
     componentDidMount() {
-        this.getExpenses(this.state.currentDate.getFullYear() , this.state.currentDate.getMonth() + 1);
+        this.getExpenses(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
         this.getExpenseCategories();
     }
 
@@ -54,17 +54,21 @@ class ExpenseList extends Component {
             .then(data => this.setState({expenseCategories: data}));
     }
 
-    getSelectedOptions() {
-        const data = this.state.expenseCategories
+    getExpenses(year, month) {
+        fetch('/expenses?year=' + year + '&month=' + month)
+            .then(response => response.json())
+            .then(data => this.setState({expenses: data}));
+    }
 
-        return data.map(d => ({
+    getSelectedOptions() {
+        return this.state.expenseCategories.map(d => ({
             "value": d.id,
             "label": d.description,
         }))
     }
 
-    async remove(id) {
-        await fetch(`/expenses/${id}`, {
+    remove(id) {
+        fetch(`/expenses/${id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -76,11 +80,6 @@ class ExpenseList extends Component {
         });
     }
 
-    getExpenses(year, month) {
-        fetch('/expenses?year=' + year + '&month=' + month)
-            .then(response => response.json())
-            .then(data => this.setState({expenses: data}));
-    }
 
     async handleSubmit(event) {
         event.preventDefault();
@@ -96,8 +95,8 @@ class ExpenseList extends Component {
             });
         this.setState({item: this.expense});
         document.getElementById('expensesForm').reset()
-        await this.getExpenseCategories();
-        await this.getExpenses(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1)
+        this.getExpenseCategories();
+        this.getExpenses(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1)
     }
 
     handleExpenseDescriptionChange(event) {
@@ -142,8 +141,8 @@ class ExpenseList extends Component {
     }
 
     renderTableData(categoryId) {
-        return this.state.expenses.map(expense => {
-            if (categoryId === expense.category.id) {
+        let filteredExpenses = [...this.state.expenses].filter(expense => expense.category.id === categoryId);
+        return filteredExpenses.map(expense => {
                 return (
                     <tr key={expense.id}>
                         <td>{expense.additionalInformation}</td>
@@ -156,9 +155,6 @@ class ExpenseList extends Component {
                         </td>
                     </tr>
                 )
-            } else {
-                return null;
-            }
         });
     }
 
@@ -177,13 +173,13 @@ class ExpenseList extends Component {
         return (
             <div>
                 <AppNavBar/>
-
                 <Container fluid>
                     <div>
                         <br/>
                         <Container>
-                            <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
-                            <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Wydatki'} />
+                            <MonthManager currentDate={this.state.currentDate}
+                                          handleDateChange={this.handleDateChange.bind(this)}/>
+                            <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Wydatki'}/>
                             <Form id='expensesForm' onSubmit={this.handleSubmit}>
                                 <FormGroup className='card p-3 bg-light'>
                                     <h5>Nowy wydatek</h5>

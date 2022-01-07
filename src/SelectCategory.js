@@ -12,8 +12,8 @@ class SelectCategory extends Component {
         }
     }
 
-    async getOptions() {
-        const res = await axios.get('/categories')
+     getOptions() {
+        const res =  axios.get('/categories')
         const data = res.data
 
         const options = data.map(d => ({
