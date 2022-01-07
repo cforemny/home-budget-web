@@ -25,10 +25,9 @@ class IncomeList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            incomes: [],
             currentDate: new Date(),
             item: this.income,
-            incomeCategories: []
+            incomesGrouped: []
         };
         this.remove = this.remove.bind(this);
         this.handleIncomeDescriptionChange = this.handleIncomeDescriptionChange.bind(this);
@@ -39,33 +38,26 @@ class IncomeList extends Component {
     }
 
     componentDidMount() {
-        this.getIncomes(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
-        this.getIncomeCategories();
+        this.getIncomesGrouped(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
     }
 
     handleDateChange(date) {
-        this.getIncomes(date.getFullYear(), date.getMonth() + 1)
+        this.getIncomesGrouped(date.getFullYear(), date.getMonth() + 1)
         this.setState({currentDate: date})
     }
 
-    getIncomes(year, month) {
-        fetch('/incomes?year=' + year + '&month=' + month)
+    getIncomesGrouped(year, month) {
+        fetch('/incomes/grouped?year=' + year + '&month=' + month)
             .then(response => response.json())
-            .then(data => this.setState({incomes: data}));
-    }
-
-    getIncomeCategories() {
-        fetch('/categories/income')
-            .then(response => response.json())
-            .then(data => this.setState({incomeCategories: data}));
+            .then(data => this.setState({incomesGrouped: data}));
     }
 
     getSelectedOptions() {
-        const data = this.state.incomeCategories
+        const data = this.state.incomesGrouped
 
         return data.map(d => ({
-            "value": d.id,
-            "label": d.description,
+            "value": d.categoryId,
+            "label": d.category,
         }))
     }
 
@@ -97,8 +89,7 @@ class IncomeList extends Component {
                 });
             this.setState({item: this.income});
             document.getElementById('incomesForm').reset()
-            this.getIncomeCategories();
-            this.getIncomes(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1)
+            this.getIncomesGrouped(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1)
         } catch (error) {
             console.log('Problem with submitting income')
         }
@@ -145,39 +136,41 @@ class IncomeList extends Component {
         this.setState({item});
     }
 
-    renderTableData(categoryId) {
-        return this.state.incomes.map(income => {
-            if (categoryId === income.category.id) {
-                return (
-                    <tr key={income.id}>
-                        <td>{income.additionalInformation}</td>
-                        <td>{income.value} zł</td>
-                        <td>{income.insertDate}</td>
-                        <td>
-                            <Button size="sm" color="primary" tag={Link}
-                                    to={"/incomes/" + income.id}>Edytuj</Button>{' '}
-                            <Button size="sm" color="danger" onClick={() => this.remove(income.id)}>Usun</Button>
-                        </td>
-                    </tr>
-                )
-            } else {
-                return null;
-            }
-        });
+    renderGroupedIncome(incomeByCategory) {
+        return (
+            incomeByCategory.map(income => {
+                    return (
+                        <tr key={income.id}>
+                            <td>{income.additionalInformation}</td>
+                            <td>{income.value} zł</td>
+                            <td>{income.insertDate}</td>
+                            <td>
+                                <Button size="sm" color="primary" tag={Link}
+                                        to={"/incomes/" + income.id}>Edytuj</Button>{' '}
+                                <Button size="sm" color="danger" onClick={() => this.remove(income.id)}>Usun</Button>
+                            </td>
+                        </tr>
+                    )
+                }
+            )
+        )
+    }
+
+    renderGroupedData() {
+        return this.state.incomesGrouped.map(incomeByCategory => {
+            return (
+                <tbody>
+                <tr key={incomeByCategory.category} className="text-uppercase">
+                    <td><strong>{incomeByCategory.category}</strong></td>
+                </tr>
+                {this.renderGroupedIncome(incomeByCategory.incomes)}
+                </tbody>
+            )
+        })
     }
 
     render() {
         const {item} = this.state;
-        const {incomeCategories} = this.state;
-        const incomeCategoryList = incomeCategories.map(category => {
-            return <tbody key={category.description}>
-            <tr className="text-uppercase" key={category.id}>
-                <td><strong>{category.description}</strong></td>
-            </tr>
-            {this.renderTableData(category.id)}
-            </tbody>
-        });
-
         return (
             <div>
                 <AppNavBar/>
@@ -200,21 +193,21 @@ class IncomeList extends Component {
                                             onChange={this.handleCategoryChange}/>
                                     <Button size="sm">Dodaj</Button>
                                 </FormGroup>
-                                <br/>
-                                <div className='card p-3 bg-light'>
-                                    <Table responsive hover>
-                                        <thead>
-                                        <tr>
-                                            <th>Kategoria/Opis</th>
-                                            <th>Kwota</th>
-                                            <th>Data dodania</th>
-                                            <th>Akcja</th>
-                                        </tr>
-                                        </thead>
-                                        {incomeCategoryList}
-                                    </Table>
-                                </div>
                             </Form>
+                            <br/>
+                            <div className='card p-3 bg-light'>
+                                <Table responsive hover>
+                                    <thead>
+                                    <tr>
+                                        <th>Kategoria/Opis</th>
+                                        <th>Kwota</th>
+                                        <th>Data dodania</th>
+                                        <th>Akcja</th>
+                                    </tr>
+                                    </thead>
+                                    {this.renderGroupedData()}
+                                </Table>
+                            </div>
                         </Container>
                     </div>
                 </Container>

@@ -29,16 +29,16 @@ class ExpenseEdit extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-     componentDidMount() {
+    async componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const expense =  ( fetch(`/expenses/${this.props.match.params.id}`)).json();
+            const expense = await (await fetch(`/expenses/${this.props.match.params.id}`)).json();
             this.setState({item: expense});
         }
-         this.getOptions();
+        this.getOptions();
     }
 
-     getOptions() {
-        const res =  axios.get('/categories/expense')
+    async getOptions() {
+        const res = await axios.get('/categories/expense')
         const data = res.data
 
         const options = data.map(d => ({
@@ -65,11 +65,11 @@ class ExpenseEdit extends Component {
         }
     }
 
-     handleSubmit(event) {
+    handleSubmit(event) {
         event.preventDefault();
         const {item} = this.state;
 
-         fetch('/expenses' + (item.id ? '/' + item.id : ''), {
+        fetch('/expenses' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -112,8 +112,8 @@ class ExpenseEdit extends Component {
                                value={item.insertDate || ''}
                                onChange={this.handleChange} autoComplete="insertDate"/>
                     </FormGroup>
-                        <Button color="primary" type="submit">Zapisz</Button>{' '}
-                        <Button color="secondary" tag={Link} to="/expenses">Anuluj</Button>
+                    <Button color="primary" type="submit">Zapisz</Button>{' '}
+                    <Button color="secondary" tag={Link} to="/expenses">Anuluj</Button>
                 </Form>
             </Container>
         </div>
