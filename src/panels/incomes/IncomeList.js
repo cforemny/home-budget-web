@@ -69,8 +69,7 @@ class IncomeList extends Component {
                 'Content-Type': 'application/json'
             }
         }).then(() => {
-            let updatedIncomes = [...this.state.incomes].filter(i => i.id !== id);
-            this.setState({incomes: updatedIncomes});
+            this.getIncomesGrouped(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
         });
     }
 

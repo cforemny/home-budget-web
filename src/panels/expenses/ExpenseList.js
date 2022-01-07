@@ -27,7 +27,7 @@ class ExpenseList extends Component {
         this.state = {
             currentDate: new Date(),
             item: this.expense,
-            expenseGrouped: []
+            expensesGrouped: []
         };
         this.remove = this.remove.bind(this);
         this.handleExpenseDescriptionChange = this.handleExpenseDescriptionChange.bind(this);
@@ -69,8 +69,7 @@ class ExpenseList extends Component {
                 'Content-Type': 'application/json'
             }
         }).then(() => {
-            let updatedExpenses = [...this.state.expenses].filter(i => i.id !== id);
-            this.setState({expenses: updatedExpenses});
+            this.getExpensesGrouped(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
         });
     }
 
