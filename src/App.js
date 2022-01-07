@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import './App.css';
-import Home from './Home';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import ExpenseList from './panels/expenses/ExpenseList';
 import ExpenseEdit from "./panels/expenses/ExpenseEdit";
@@ -25,11 +24,11 @@ class App extends Component {
     }
 
     render() {
-        if (this.state.isUserValid !== 'true') {
-            return (
-                <Home/>
-            )
-        } else {
+        // if (this.state.isUserValid !== 'true') {
+        //     return (
+        //         <Home/>
+        //     )
+        // } else {
             return (<Router>
                     <Switch>
                         <Route path='/' exact={true} component={ExpenseList}/>
@@ -45,7 +44,7 @@ class App extends Component {
                 </Router>
             )
         }
-    }
+    // }
 }
 
 export default App;
