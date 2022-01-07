@@ -63,8 +63,9 @@ class SummaryPanel extends Component {
         return (
             <div>
                 <AppNavBar/>
-                <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
+                <br/>
                 <Container fluid="sm">
+                    <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
                     <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Podsumowanie miesiaca: '} />
                     <Row>
                         <Col>Rozkład wydatków<ExpenseSummary expenses={this.state.expenses}/></Col>

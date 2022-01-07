@@ -48,9 +48,9 @@ class MonthPlanner extends Component {
         return (
             <div>
                 <AppNavBar/>
-                <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
                 <Container fluid>
                     <div>
+                        <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
                         <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Planer budzetu'}/>
                         <BudgetRealization expenseSummary={this.state.expenseSummary}
                                            incomesSummary={this.state.incomesSummary}/>

@@ -177,11 +177,11 @@ class IncomeList extends Component {
         return (
             <div>
                 <AppNavBar/>
-                <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
                 <Container fluid>
                     <div>
                         <br/>
                         <Container>
+                            <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
                             <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Przychody'} />
                             <Form id='incomesForm' onSubmit={this.handleSubmit}>
                                 <FormGroup className='card p-3 bg-light'>
