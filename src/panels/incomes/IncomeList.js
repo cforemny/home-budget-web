@@ -49,13 +49,13 @@ class IncomeList extends Component {
     }
 
     getIncomes(year, month) {
-        fetch('/incomes?year=' + year + '&month=' + month)
+        fetch('http://46.41.137.113/8090/incomes?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({incomes: data}));
     }
 
     getIncomeCategories() {
-        fetch('/categories/income')
+        fetch('http://46.41.137.113/8090/categories/income')
             .then(response => response.json())
             .then(data => this.setState({incomeCategories: data}));
     }
@@ -85,7 +85,7 @@ class IncomeList extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('/incomes',
+        await fetch('http://46.41.137.113/8090/incomes',
             {
                 method: 'POST',
                 headers: {

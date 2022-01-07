@@ -49,7 +49,7 @@ class ExpenseList extends Component {
     }
 
     getExpenseCategories() {
-        fetch('/categories/expense')
+        fetch('http://46.41.137.113/8090/categories/expense')
             .then(response => response.json())
             .then(data => this.setState({expenseCategories: data}));
     }
@@ -77,7 +77,7 @@ class ExpenseList extends Component {
     }
 
     getExpenses(year, month) {
-        fetch('/expenses?year=' + year + '&month=' + month)
+        fetch('http://46.41.137.113/8090/expenses?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({expenses: data}));
     }
@@ -85,7 +85,7 @@ class ExpenseList extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let {item} = this.state;
-        await fetch('/expenses',
+        await fetch('http://46.41.137.113/8090/expenses',
             {
                 method: 'POST',
                 headers: {

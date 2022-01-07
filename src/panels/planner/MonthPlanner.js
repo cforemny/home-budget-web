@@ -33,13 +33,13 @@ class MonthPlanner extends Component {
     }
 
     getExpenseSummary(year, month) {
-        fetch('/planner/expenses/summary?year=' + year + '&month=' + month)
+        fetch('http://46.41.137.113/8090/planner/expenses/summary?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({expenseSummary: data}));
     }
 
     getIncomeSummary(year, month) {
-        fetch('/planner/incomes/summary?year=' + year + '&month=' + month)
+        fetch('http://46.41.137.113/8090/planner/incomes/summary?year=' + year + '&month=' + month)
             .then(response => response.json())
             .then(data => this.setState({incomesSummary: data}));
     }
