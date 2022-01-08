@@ -24,11 +24,11 @@ class App extends Component {
     }
 
     render() {
-        // if (this.state.isUserValid !== 'true') {
-        //     return (
-        //         <Home/>
-        //     )
-        // } else {
+        if (this.state.isUserValid !== 'true') {
+            return (
+                <Home/>
+            )
+        } else {
             return (<Router>
                     <Switch>
                         <Route path='/' exact={true} component={Home}/>
@@ -44,7 +44,7 @@ class App extends Component {
                 </Router>
             )
         }
-    // }
+    }
 }
 
 export default App;

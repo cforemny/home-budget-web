@@ -16,9 +16,9 @@ class Home extends Component {
                             rozeszły” – John C. Maxwell.
                         </p>
                     </div>
-                    {/*<div className="d-flex justify-content-center">*/}
-                    {/*    <Login/>*/}
-                    {/*</div>*/}
+                    <div className="d-flex justify-content-center">
+                        <Login/>
+                    </div>
                 </div>
             )
     }
