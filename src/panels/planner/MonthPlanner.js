@@ -50,34 +50,40 @@ class MonthPlanner extends Component {
                 <AppNavBar/>
                 <Container fluid>
                     <div>
-                        <MonthManager currentDate={this.state.currentDate} handleDateChange={this.handleDateChange.bind(this)}/>
-                        <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Planer budzetu'}/>
-                        <BudgetRealization expenseSummary={this.state.expenseSummary}
-                                           incomesSummary={this.state.incomesSummary}/>
-                        <Nav tabs>
-                            <NavItem>
-                                <NavLink onClick={() => this.setState({activeTab: 'expenses'})}> Wydatki
-                                </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink onClick={() => this.setState({activeTab: 'incomes'})}> Przychody
-                                </NavLink>
-                            </NavItem>
-                        </Nav>
-                        <TabContent activeTab={this.state.activeTab}>
-                            <TabPane tabId="expenses">
-                                <Row>
-                                    <Col>
-                                        <ExpensePlanner year={this.state.currentDate.getFullYear()}
-                                                        month={this.state.currentDate.getMonth() + 1}/>
-                                    </Col>
-                                </Row>
-                            </TabPane>
-                            <TabPane tabId="incomes">
-                                <IncomePlanner year={this.state.currentDate.getFullYear()}
-                                               month={this.state.currentDate.getMonth() + 1}/>
-                            </TabPane>
-                        </TabContent>
+                        <br/>
+                        <Container>
+                            <MonthManager currentDate={this.state.currentDate}
+                                          handleDateChange={this.handleDateChange.bind(this)}/>
+                            <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Planer budzetu'}/>
+                            <BudgetRealization expenseSummary={this.state.expenseSummary}
+                                               incomesSummary={this.state.incomesSummary}/>
+                            <Nav tabs>
+                                <NavItem>
+                                    <NavLink style={{color: 'white', background: '#6c757d', margin: 5}} className="text-uppercase "
+                                             onClick={() => this.setState({activeTab: 'expenses'})}> Wydatki
+                                    </NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink style={{color: 'white', background: '#6c757d', margin: 5}} className="text-uppercase"
+                                             onClick={() => this.setState({activeTab: 'incomes'})}> Przychody
+                                    </NavLink>
+                                </NavItem>
+                            </Nav>
+                            <TabContent activeTab={this.state.activeTab}>
+                                <TabPane tabId="expenses">
+                                    <Row>
+                                        <Col>
+                                            <ExpensePlanner year={this.state.currentDate.getFullYear()}
+                                                            month={this.state.currentDate.getMonth() + 1}/>
+                                        </Col>
+                                    </Row>
+                                </TabPane>
+                                <TabPane tabId="incomes">
+                                    <IncomePlanner year={this.state.currentDate.getFullYear()}
+                                                   month={this.state.currentDate.getMonth() + 1}/>
+                                </TabPane>
+                            </TabContent>
+                        </Container>
                     </div>
                 </Container>
             </div>

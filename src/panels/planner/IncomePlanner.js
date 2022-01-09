@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Container, FormGroup, Input, Table} from 'reactstrap';
+import {FormGroup, Input, Table} from 'reactstrap';
 import Button from "reactstrap/es/Button";
 import Form from "reactstrap/es/Form";
 import Select from "react-select";
@@ -184,8 +184,6 @@ class IncomePlanner extends Component {
 
         return (
             <div>
-                <br/>
-                <Container>
                     <Form id='incomesForm' onSubmit={this.handleSubmit}>
                         <FormGroup className='card p-3 bg-light'>
                             <h5>Nowy przychod</h5>
@@ -212,7 +210,6 @@ class IncomePlanner extends Component {
                             </Table>
                         </div>
                     </Form>
-                </Container>
             </div>
         );
     }

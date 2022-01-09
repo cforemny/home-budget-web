@@ -142,7 +142,7 @@ class IncomeList extends Component {
                     return (
                         <tr key={income.id}>
                             <td>{income.additionalInformation}</td>
-                            <td>{income.value} zł</td>
+                            <td>{income.value}zł</td>
                             <td>{income.insertDate}</td>
                             <td>
                                 <Button size="sm" color="primary" tag={Link}
@@ -160,8 +160,9 @@ class IncomeList extends Component {
         return this.state.incomesGrouped.map(incomeByCategory => {
             return (
                 <tbody>
-                <tr key={incomeByCategory.category} className="text-uppercase">
-                    <td><strong>{incomeByCategory.category}</strong></td>
+                <tr key={incomeByCategory.category} >
+                    <td className="text-uppercase"><strong>{incomeByCategory.category}</strong></td>
+                    <td><strong>{incomeByCategory.incomes.reduce((a, v) => a+v.value, 0)}zł</strong></td>
                 </tr>
                 {this.renderGroupedIncome(incomeByCategory.incomes)}
                 </tbody>

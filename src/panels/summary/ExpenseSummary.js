@@ -20,6 +20,8 @@ class ExpenseSummary extends Component {
                         'rgba(75, 192, 192, 0.2)',
                         'rgba(153, 102, 255, 0.2)',
                         'rgba(255, 159, 64, 0.2)',
+                        'rgba(155, 139, 74, 1)',
+                        'rgba(235, 109, 64, 2)',
                     ],
                     borderColor: [
                         'rgba(255, 99, 132, 1)',
@@ -28,6 +30,8 @@ class ExpenseSummary extends Component {
                         'rgba(75, 192, 192, 1)',
                         'rgba(153, 102, 255, 1)',
                         'rgba(255, 159, 64, 1)',
+                        'rgba(155, 139, 74, 1)',
+                        'rgba(235, 109, 64, 2)',
                     ],
                     borderWidth: 1,
                 },

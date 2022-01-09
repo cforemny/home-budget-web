@@ -44,33 +44,15 @@ export default class AppNavBar extends Component {
                             <NavItem>
                                 <NavLink href="/summary">Podsumowanie</NavLink>
                             </NavItem>
-                            {/*<NavItem>*/}
-                            {/*    <NavLink href="/accounts">Stan kont</NavLink>*/}
-                            {/*</NavItem>*/}
+                            <NavItem>
+                                <NavLink href="/accounts">Stan kont</NavLink>
+                            </NavItem>
                             <NavItem>
                                 <NavLink href="/admin-panel">Panel administratora</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink onClick={this.logout}>Wyloguj</NavLink>
+                                <NavLink href="/" onClick={this.logout}>Wyloguj</NavLink>
                             </NavItem>
-                            {/*moze sie przyda*/}
-                            {/*<UncontrolledDropdown nav inNavbar>*/}
-                            {/*    <DropdownToggle nav caret>*/}
-                            {/*        Test drop down*/}
-                            {/*    </DropdownToggle>*/}
-                            {/*    <DropdownMenu right>*/}
-                            {/*        <DropdownItem>*/}
-                            {/*            Option 1*/}
-                            {/*        </DropdownItem>*/}
-                            {/*        <DropdownItem>*/}
-                            {/*            Option 2*/}
-                            {/*        </DropdownItem>*/}
-                            {/*        <DropdownItem divider/>*/}
-                            {/*        <DropdownItem>*/}
-                            {/*            Reset*/}
-                            {/*        </DropdownItem>*/}
-                            {/*    </DropdownMenu>*/}
-                            {/*</UncontrolledDropdown>*/}
                         </Nav>
                     </Collapse>
                 </Navbar>

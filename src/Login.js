@@ -15,7 +15,7 @@ class Login extends Component {
         this.changeUsername = this.changeUsername.bind(this);
     }
 
-     verifyUser() {
+    verifyUser() {
         // TODO: zrobic to chytrze, a nie w parametrach
         return fetch('/login?user=' + this.state.userName + '&password=' + this.state.password, {
             method: 'POST',
@@ -29,10 +29,9 @@ class Login extends Component {
             });
     }
 
-
-     handleSubmit(e) {
+    async handleSubmit(e) {
         e.preventDefault();
-        let val =  this.verifyUser();
+        let val = await this.verifyUser();
         if (val) {
             sessionStorage.setItem('isUserValid', 'true');
             window.location.reload(false);

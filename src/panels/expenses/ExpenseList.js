@@ -141,7 +141,7 @@ class ExpenseList extends Component {
                     return (
                         <tr key={expense.id}>
                             <td>{expense.additionalInformation}</td>
-                            <td>{expense.value} zł</td>
+                            <td>{expense.value}zł</td>
                             <td>{expense.insertDate}</td>
                             <td>
                                 <Button size="sm" color="primary" tag={Link}
@@ -159,8 +159,9 @@ class ExpenseList extends Component {
         return this.state.expensesGrouped.map(expenseByCategory => {
             return (
                 <tbody>
-                <tr key={expenseByCategory.category} className="text-uppercase">
-                    <td><strong>{expenseByCategory.category}</strong></td>
+                <tr key={expenseByCategory.category}>
+                    <td className="text-uppercase"><strong>{expenseByCategory.category}</strong></td>
+                    <td><strong>{expenseByCategory.expenses.reduce((a, v) => a + v.value, 0)}zł</strong></td>
                 </tr>
                 {this.renderGroupedExpense(expenseByCategory.expenses)}
                 </tbody>
@@ -199,7 +200,7 @@ class ExpenseList extends Component {
                                     <thead>
                                     <tr>
                                         <th>Kategoria/Opis</th>
-                                        <th>Kwota</th>
+                                        <th>Kwota/Suma</th>
                                         <th>Data dodania</th>
                                         <th>Akcja</th>
                                     </tr>
