@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import AppNavBar from './AppNavBar';
-import Login from "./Login";
 
 class Home extends Component {
 
@@ -17,9 +16,9 @@ class Home extends Component {
                             rozeszły” – John C. Maxwell.
                         </p>
                     </div>
-                    <div className="d-flex justify-content-center">
-                        <Login/>
-                    </div>
+                    {/*<div className="d-flex justify-content-center">*/}
+                    {/*    <Login/>*/}
+                    {/*</div>*/}
                 </div>
             )
     }
