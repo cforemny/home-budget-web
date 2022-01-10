@@ -27,7 +27,8 @@ class ExpenseList extends Component {
         this.state = {
             currentDate: new Date(),
             item: this.expense,
-            expensesGrouped: []
+            expensesGrouped: [],
+            expenseCategories: []
         };
         this.remove = this.remove.bind(this);
         this.handleExpenseDescriptionChange = this.handleExpenseDescriptionChange.bind(this);
@@ -38,26 +39,32 @@ class ExpenseList extends Component {
     }
 
     componentDidMount() {
-        this.getExpensesGrouped(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
+        this.getExpensesGrouped();
     }
 
     handleDateChange(date) {
-        this.getExpensesGrouped(date.getFullYear(), date.getMonth() + 1)
+        this.getExpensesGrouped()
         this.setState({currentDate: date})
     }
 
-    getExpensesGrouped(year, month) {
-        fetch('/expenses/grouped?year=' + year + '&month=' + month)
+    getExpensesGrouped() {
+        fetch('/expenses/grouped?year=' + this.state.currentDate.getFullYear() + '&month=' + this.state.currentDate.getMonth() + 1)
             .then(response => response.json())
             .then(data => this.setState({expensesGrouped: data}));
+    }
+
+    getExpenseCategories() {
+        fetch('/categories/expense')
+            .then(response => response.json())
+            .then(data => this.setState({expenseCategories: data}));
     }
 
     getSelectedOptions() {
         const data = this.state.expensesGrouped
 
         return data.map(d => ({
-            "value": d.categoryId,
-            "label": d.category,
+            "value": d.id,
+            "label": d.description,
         }))
     }
 
@@ -102,7 +109,7 @@ class ExpenseList extends Component {
             additionalInformation: target.value,
             insertDate: this.state.currentDate,
             category: {
-                id: target.id
+                id: this.state.item.category.id
             }
         }
         this.setState({item});
@@ -116,7 +123,7 @@ class ExpenseList extends Component {
             additionalInformation: this.state.item.additionalInformation,
             insertDate: this.state.currentDate,
             category: {
-                id: target.id
+                id: this.state.item.category.id
             }
         }
         this.setState({item});

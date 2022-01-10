@@ -1,83 +1,87 @@
 import React, {Component} from 'react';
 import {Container, Table} from 'reactstrap';
 import AppNavBar from '../../AppNavBar';
+import MonthManager from "../MonthManager";
+import PanelNavBar from "../PanelNavBar";
 
 class AccountSummary extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            currentDate: new Date(),
             accounts: []
         };
+        this.handleDateChange = this.handleDateChange.bind(this);
     }
 
     componentDidMount() {
-        let today = new Date()
-       fetch('/account?date=' + today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate())
+        const date = this.getFormattedDate();
+        this.getAccounts(date);
+    }
+
+    getFormattedDate() {
+        const dateObj = new Date();
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const year = dateObj.getFullYear();
+
+        return year + '-' + month + '-' + day;
+    }
+
+    getAccounts() {
+        let date = this.getFormattedDate()
+        fetch('/account?date=' + date)
             .then(response => response.json())
             .then(data => this.setState({accounts: data}));
     }
 
-    renderTableData(monthIndex) {
-        return this.state.accounts.map(account => {
-            if (account.insertDate.substring(5, 7) === monthIndex) {
-                return (
-                    <tr key={account.id}>
-                        <td>{account.description}</td>
-                        <td>{account.moneyAmount} zł</td>
-                    </tr>
-                )
-            } else {
-                return null;
-            }
-        });
+    handleDateChange(date) {
+        this.setState({currentDate: date})
+        this.getAccounts()
     }
 
-    renderMonths(months) {
-        return months.map((month => {
+    renderTableData() {
+        console.log('rendruj dziadu')
+        return this.state.accounts.map(account => {
             return (
-                <tr>
-                    <td>
-                        {month}
-                    </td>
-                    {this.state.accounts}.map((account => {
-
-                })
+                <tr key={account.id}>
+                    <td>{account.description}</td>
+                    <td>{account.moneyAmount}</td>
                 </tr>
             )
-        }))
+        })
     }
 
-
     render() {
-        const months = [
-            'Styczeń',
-            'Luty',
-            'Marzec',
-            'Kwiecien',
-            'Maj',
-            'Czerwiec',
-            'Lipiec',
-            'Sierpień',
-            'Wrzesień',
-            'Październik',
-            'Listopad',
-            'Grudzien'
-        ]
-        return <div>
-            <AppNavBar/>
-            <Container fluid>
-                <h3>Stan kont</h3>
-                <div>
-                    <Table>
-                        {this.renderMonths(months)}
-                        <tbody>
-
-                        </tbody>
-                    </Table>
-                </div>
-            </Container>
-        </div>
+        return (
+            <div>
+                <AppNavBar/>
+                <Container fluid>
+                    <div>
+                        <br/>
+                        <Container>
+                            <MonthManager currentDate={this.state.currentDate}
+                                          handleDateChange={this.handleDateChange.bind(this)}/>
+                            <PanelNavBar month={this.state.currentDate.getMonth() + 1} panelName={'Stan kont'}/>
+                            <div>
+                                <Table>
+                                    <thead>
+                                    <tr>
+                                        <th>Nazwa konta</th>
+                                        <th>Stan konta</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {this.renderTableData()}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </Container>
+                    </div>
+                </Container>
+            </div>
+        )
     }
 }
 

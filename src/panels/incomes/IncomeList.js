@@ -27,7 +27,8 @@ class IncomeList extends Component {
         this.state = {
             currentDate: new Date(),
             item: this.income,
-            incomesGrouped: []
+            incomesGrouped: [],
+            incomeCategories: []
         };
         this.remove = this.remove.bind(this);
         this.handleIncomeDescriptionChange = this.handleIncomeDescriptionChange.bind(this);
@@ -39,6 +40,7 @@ class IncomeList extends Component {
 
     componentDidMount() {
         this.getIncomesGrouped();
+        this.getIncomeCategories();
     }
 
     handleDateChange(date) {
@@ -53,12 +55,18 @@ class IncomeList extends Component {
             .then(data => this.setState({incomesGrouped: data}));
     }
 
+    getIncomeCategories() {
+        fetch('/categories/income')
+            .then(response => response.json())
+            .then(data => this.setState({incomeCategories: data}));
+    }
+
     getSelectedOptions() {
-        const data = this.state.incomesGrouped
+        const data = this.state.incomeCategories
 
         return data.map(d => ({
-            "value": d.categoryId,
-            "label": d.category,
+            "value": d.id,
+            "label": d.description,
         }))
     }
 
@@ -103,7 +111,7 @@ class IncomeList extends Component {
             additionalInformation: target.value,
             insertDate: this.state.currentDate,
             category: {
-                id: target.value
+                id: this.state.item.category.id
             }
         }
         this.setState({item});
@@ -117,7 +125,7 @@ class IncomeList extends Component {
             additionalInformation: this.state.item.additionalInformation,
             insertDate: this.state.currentDate,
             category: {
-                id: target.id
+                id: this.state.item.category.id
             }
         }
         this.setState({item});
