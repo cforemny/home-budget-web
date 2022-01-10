@@ -40,6 +40,7 @@ class ExpenseList extends Component {
 
     componentDidMount() {
         this.getExpensesGrouped();
+        this.getExpenseCategories();
     }
 
     handleDateChange(date) {
@@ -60,7 +61,7 @@ class ExpenseList extends Component {
     }
 
     getSelectedOptions() {
-        const data = this.state.expensesGrouped
+        const data = this.state.expenseCategories
 
         return data.map(d => ({
             "value": d.id,
