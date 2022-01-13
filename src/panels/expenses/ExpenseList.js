@@ -39,17 +39,19 @@ class ExpenseList extends Component {
     }
 
     componentDidMount() {
-        this.getExpensesGrouped();
+        this.getExpensesGrouped(this.state.currentDate);
         this.getExpenseCategories();
     }
 
     handleDateChange(date) {
-        this.getExpensesGrouped()
         this.setState({currentDate: date})
+        this.getExpensesGrouped(date)
     }
 
-    getExpensesGrouped() {
-        fetch('/expenses/grouped?year=' + this.state.currentDate.getFullYear() + '&month=' + this.state.currentDate.getMonth() + 1)
+    getExpensesGrouped(date) {
+        console.log(this.state.currentDate.getFullYear())
+        console.log(this.state.currentDate.getMonth() + 1)
+        fetch('/expenses/grouped?year=' + date.getFullYear() + '&month=' + (date.getMonth() + 1))
             .then(response => response.json())
             .then(data => this.setState({expensesGrouped: data}));
     }
@@ -77,7 +79,7 @@ class ExpenseList extends Component {
                 'Content-Type': 'application/json'
             }
         }).then(() => {
-            this.getExpensesGrouped(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1);
+            this.getExpensesGrouped(this.state.currentDate);
         });
     }
 
@@ -96,7 +98,7 @@ class ExpenseList extends Component {
                 });
             this.setState({item: this.expense});
             document.getElementById('expensesForm').reset()
-            this.getExpensesGrouped(this.state.currentDate.getFullYear(), this.state.currentDate.getMonth() + 1)
+            this.getExpensesGrouped(this.state.currentDate)
         } catch (error) {
             console.log('Problem with submitting expense')
         }

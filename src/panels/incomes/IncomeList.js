@@ -39,18 +39,18 @@ class IncomeList extends Component {
     }
 
     componentDidMount() {
-        this.getIncomesGrouped();
+        this.getIncomesGrouped(this.state.currentDate);
         this.getIncomeCategories();
     }
 
     handleDateChange(date) {
-        this.getIncomesGrouped(date.getFullYear(), date.getMonth() + 1)
         this.setState({currentDate: date})
+        this.getIncomesGrouped(date)
     }
 
-    getIncomesGrouped() {
-        fetch('/incomes/grouped?year=' + this.state.currentDate.getFullYear() + '&month='
-            + this.state.currentDate.getMonth() + 1)
+    getIncomesGrouped(date) {
+        fetch('/incomes/grouped?year=' + date.getFullYear() + '&month='
+            + (date.getMonth() + 1))
             .then(response => response.json())
             .then(data => this.setState({incomesGrouped: data}));
     }
@@ -78,7 +78,7 @@ class IncomeList extends Component {
                 'Content-Type': 'application/json'
             }
         }).then(() => {
-            this.getIncomesGrouped();
+            this.getIncomesGrouped(this.state.currentDate);
         });
     }
 
@@ -97,7 +97,7 @@ class IncomeList extends Component {
                 });
             this.setState({item: this.income});
             document.getElementById('incomesForm').reset()
-            this.getIncomesGrouped()
+            this.getIncomesGrouped(this.state.currentDate)
         } catch (error) {
             console.log('Problem with submitting income')
         }

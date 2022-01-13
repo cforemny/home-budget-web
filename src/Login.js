@@ -54,21 +54,15 @@ class Login extends Component {
     render() {
         return (
             <div>
-                <div className="login-wrapper">
-                    <Form className="form" onSubmit={this.handleSubmit}>
-                        <FormGroup>
-                            <Label>Użytkownik </Label>
-                            <Input type="text" onChange={this.changeUsername}/>
-                            <label>
-                                <p>Hasło</p>
-                                <Input type="password" onChange={this.changePassword}/>
-                            </label>
-                            <div>
-                                <Button>Zaloguj</Button>
-                            </div>
-                        </FormGroup>
-                    </Form>
-                </div>
+                <Form className="form" onSubmit={this.handleSubmit}>
+                    <FormGroup className="lead">
+                        <Label>Użytkownik </Label>
+                        <Input type="text" onChange={this.changeUsername}/>
+                        <Label>Hasło </Label>
+                        <Input type="password" onChange={this.changePassword}/>
+                        <Button style={{marginTop: 5}}>Zaloguj</Button>
+                    </FormGroup>
+                </Form>
             </div>
         )
     }

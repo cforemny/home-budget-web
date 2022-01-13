@@ -4,15 +4,21 @@ import {Button} from "reactstrap";
 export default class MonthManager extends Component {
 
     subtractMonth() {
-        let date = this.props.currentDate
-        date.setMonth(date.getMonth() - 1)
-        return date;
+        let now =this.props.currentDate
+        if (now.getMonth() === 0) {
+            return new Date(now.getFullYear() -1, 11);
+        } else {
+            return new Date(now.getFullYear(), now.getMonth() - 1);
+        }
     }
 
     addMonth() {
-        let date = this.props.currentDate
-        date.setMonth(date.getMonth() + 1)
-        return date;
+        let now =this.props.currentDate
+        if (now.getMonth() === 11) {
+            return new Date(now.getFullYear() + 1, 0, 1);
+        } else {
+            return new Date(now.getFullYear(), now.getMonth() + 1);
+        }
     }
 
     render() {

@@ -194,7 +194,7 @@ class ExpensePlanner extends Component {
                             <Select options={this.getSelectedOptions()}
                                     placeholder={item.category.description || 'Wybierz kategorie'}
                                     onChange={this.handleCategoryChange}/>
-                            <Button size="sm">Dodaj</Button>
+                            <Button>Dodaj</Button>
                         </FormGroup>
                         <br/>
                         <div className = 'card p-3 bg-light'>
