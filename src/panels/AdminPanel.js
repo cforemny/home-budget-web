@@ -10,16 +10,25 @@ class AdminPanel extends Component {
         description: ''
     }
 
+    account = {
+        description: '',
+        moneyAmount: '',
+        insertDate: ''
+    }
+
     constructor(props) {
         super(props);
         this.state = {
-            item: this.category
+            item: this.category,
+            accountItem: this.account
         };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleCategoryChange = this.handleCategoryChange.bind(this);
+        this.handleAccountChange = this.handleAccountChange.bind(this);
+        this.handleCategorySubmit = this.handleCategorySubmit.bind(this);
+        this.handleAccountSubmit = this.handleAccountSubmit.bind(this);
     }
 
-     handleSubmit(event) {
+     handleCategorySubmit(event) {
         event.preventDefault();
         let {item} = this.state;
          fetch('/admin-panel/category/' + item.category,
@@ -31,16 +40,25 @@ class AdminPanel extends Component {
                 },
                 body: JSON.stringify(item),
             });
-        item = {
-            description: '',
-            category: ''
-        }
-        this.setState({item});
         document.getElementById('categoriesForm').reset()
-        this.props.history.push('/admin-panel');
     }
 
-    handleChange(event) {
+    handleAccountSubmit(event) {
+        event.preventDefault();
+        let {accountItem} = this.state;
+        fetch('/account',
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(accountItem),
+            });
+        document.getElementById('accountForm').reset()
+    }
+
+    handleCategoryChange(event) {
         let item;
         const target = event.target;
         item = {
@@ -50,19 +68,32 @@ class AdminPanel extends Component {
         this.setState({item});
     }
 
+    handleAccountChange(event) {
+        let accountItem;
+        const target = event.target;
+        accountItem = {
+            description: target.value,
+            moneyAmount: 0,
+            insertDate: new Date()
+        }
+        this.setState({accountItem});
+    }
+
     render() {
         return (
             <div>
                 <AppNavBar/>
                 <Container>
-                    <Form id='categoriesForm' onSubmit={this.handleSubmit}>
+                    <Form id='categoriesForm' onSubmit={this.handleCategorySubmit}>
                         <PanelNavBar panelName={'Panel Administratora'} />
+                        <br/>
+                        <h5 className="text-muted">Kategorie</h5>
                         <Table>
                             <tbody>
                             <tr>
                                 <td>
                                     <Input name='expense' placeholder='Dodaj kateogorie wydatkow'
-                                           onChange={this.handleChange}
+                                           onChange={this.handleCategoryChange}
                                     />
                                 </td>
                                 <td>
@@ -72,7 +103,21 @@ class AdminPanel extends Component {
                             <tr>
                                 <td>
                                     <Input name='income' placeholder='Dodaj kateogorie przychodow'
-                                           onChange={this.handleChange}/>
+                                           onChange={this.handleCategoryChange}/>
+                                </td>
+                                <td><Button size="sm" color="primary" type="submit">Dodaj</Button></td>
+                            </tr>
+                            </tbody>
+                        </Table>
+                    </Form>
+                    <Form id='accountForm' onSubmit={this.handleAccountSubmit}>
+                        <h5 className="text-muted">Konta</h5>
+                        <Table>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <Input name='income' placeholder='Dodaj nowe konto'
+                                           onChange={this.handleAccountChange}/>
                                 </td>
                                 <td><Button size="sm" color="primary" type="submit">Dodaj</Button></td>
                             </tr>
