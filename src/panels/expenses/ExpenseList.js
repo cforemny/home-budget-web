@@ -28,7 +28,8 @@ class ExpenseList extends Component {
             currentDate: new Date(),
             item: this.expense,
             expensesGrouped: [],
-            expenseCategories: []
+            expenseCategories: [],
+            plannedExpenses: []
         };
         this.remove = this.remove.bind(this);
         this.handleExpenseDescriptionChange = this.handleExpenseDescriptionChange.bind(this);
@@ -41,16 +42,22 @@ class ExpenseList extends Component {
     componentDidMount() {
         this.getExpensesGrouped(this.state.currentDate);
         this.getExpenseCategories();
+        this.getPlannedExpenses(this.state.currentDate)
     }
 
     handleDateChange(date) {
         this.setState({currentDate: date})
         this.getExpensesGrouped(date)
+        this.getPlannedExpenses(date)
+    }
+
+    getPlannedExpenses(date) {
+        fetch('/planner/expenses?year=' + date.getFullYear() + '&month=' + (date.getMonth() + 1))
+            .then(response => response.json())
+            .then(data => this.setState({plannedExpenses: data}));
     }
 
     getExpensesGrouped(date) {
-        console.log(this.state.currentDate.getFullYear())
-        console.log(this.state.currentDate.getMonth() + 1)
         fetch('/expenses/grouped?year=' + date.getFullYear() + '&month=' + (date.getMonth() + 1))
             .then(response => response.json())
             .then(data => this.setState({expensesGrouped: data}));
@@ -165,13 +172,34 @@ class ExpenseList extends Component {
         )
     }
 
+    getPercent(category, currentExpensesSum) {
+        {
+            let plannedExpenses = this.state.plannedExpenses.filter(expense => (expense.category.description === category))
+            let plannedExpensesSum = plannedExpenses.reduce((a, v) => a + v.value, 0)
+            let percentage = Math.round((currentExpensesSum * 100 / plannedExpensesSum))
+            console.log('dupa' + currentExpensesSum + 10)
+            if(plannedExpenses.length !== 0){
+                return(
+                <td><strong>{percentage}%</strong></td>
+
+                )
+            }else{
+                return(
+                    <td><strong>0%</strong></td>
+                )
+            }
+        }
+    }
+
     renderGroupedData() {
         return this.state.expensesGrouped.map(expenseByCategory => {
+            let currentExpensesSum = expenseByCategory.expenses.reduce((a, v) => a + v.value, 0);
             return (
                 <tbody>
                 <tr key={expenseByCategory.category}>
                     <td className="text-uppercase"><strong>{expenseByCategory.category}</strong></td>
-                    <td><strong>{expenseByCategory.expenses.reduce((a, v) => a + v.value, 0)}zł</strong></td>
+                    <td><strong>{currentExpensesSum}zł</strong></td>
+                    <td>{this.getPercent(expenseByCategory.category, currentExpensesSum)}</td>
                 </tr>
                 {this.renderGroupedExpense(expenseByCategory.expenses)}
                 </tbody>
@@ -210,7 +238,7 @@ class ExpenseList extends Component {
                                     <thead>
                                     <tr>
                                         <th>Kategoria/Opis</th>
-                                        <th>Kwota/Suma</th>
+                                        <th>Kwota</th>
                                         <th>Data dodania</th>
                                         <th>Akcja</th>
                                     </tr>
